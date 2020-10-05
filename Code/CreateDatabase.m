@@ -11,7 +11,17 @@ function database = CreateDatabase()
         FastaDb = fastaread(fasta.db);
         m = length(FastaDb);
         n = 1;
-  
+        
+        %% check for subset consideration
+        comment = sprintf("Gisaid Database size : %d by %d",n,m);
+        fprintf(comment);
+        part = input("\nConsider a subset of the database? [y,n]",'s');
+        
+        if part == 'y'
+            n = input("Enter starting index :");
+            m = input("Enter final index :");
+        end
+        %% Generating reading frames
         SequenceDb = cell(m,1);
         HeaderDb = cell(m,1);
         parfor i=1:m
