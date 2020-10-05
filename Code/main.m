@@ -1,18 +1,7 @@
 clc; clear;
-%%
-version1 = 'V10'; %% the previous version to obtain the results
-version2 = 'V30'; %% the new version to save the results
-Delimiter = "|";
-dir.base = "C:/Users/kiana/OneDrive - University of Toronto/Projects/COVID/";
-dir.data = "/data/";
-dir.db = '/gisaid_hcov-19_2020_06_15_19.fasta';
-dir.fastaseq = 'Seq.fasta';
-loc1 = dir.base+dir.data+'Database_'+version1+'_Frames.mat'; %% database location
-loc2 = dir.base+dir.data+'Database_'+version1+'_Seq.mat';
-loc4 = dir.base+'PDB.fasta';
-
+setDirectories
 %% read covid fasta sequence
-block =  CreateSequence(dir.base+dir.fastaseq);
+block =  CreateSequence(fasta.fastaseq);
 %% Parsing the database extracted and cured from GISAID
 if isfile(loc1)
     disp("Loading the database ...")
