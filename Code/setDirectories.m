@@ -1,5 +1,7 @@
 %% this script set global variables
-global version Delimiter dirc loc fasta flag;
+global version Delimiter dirc loc fasta flag result m n;
+m=0;
+n=0;
 %%
 version.Input = 'V10'; %% the version for obtaining Inputs
 version.Output = 'V20'; %% the version for saving results
@@ -21,6 +23,14 @@ else
     if length({dir(dirc.Database).name})<= 2
         flage = 0; % the database folder is empty
     end
+end
+if dir(dirc.Output+"/Result_db*")
+    flag = 2; %% the output is already created
+    result =  dir(dirc.Output+"/Result_db*").name;
+    array = strsplit(result,'_');
+    m = strsplit(array{5},'.');
+    m = str2double(m{1});
+    n = str2double(array{4});
 end
 %% Setting up input fasta files
 fasta.db = {'/gisaid_hcov-19_2020-05-01.fasta';...
