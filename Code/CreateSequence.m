@@ -8,7 +8,7 @@ function Block  = CreateSequence(DirectoryOrNCBI)
         Sequence=FastaData.Sequence;
     else
         % read from NCBI
-        NCBIname = input("Cannot find the input fasta file. Enter the NCBI name: ");
+        NCBIname = input("Cannot find the input fasta file. Enter the NCBI name: ",'s');
         Sequence =  getgenbank(NCBIname,'SequenceOnly', true);
     end
     Protein = nt2aa(Sequence,'AlternativeStartCodons',false);
