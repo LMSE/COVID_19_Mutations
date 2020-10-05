@@ -23,10 +23,12 @@ else
     end
 end
 %% Setting up input fasta files
-fasta.db = {'gisaid_hcov-19_2020-05-01.fasta';...
-    'gisaid_hcov-19_2020-07-01.fasta';'gisaid_hcov-19_2020-09-23.fasta'};
-fasta.fastaseq = 'Seq.fasta';
-fasta.pdb = 'PDB.fasta';
+fasta.db = {'/gisaid_hcov-19_2020-05-01.fasta';...
+    '/gisaid_hcov-19_2020-07-01.fasta';...
+    '/gisaid_hcov-19_2020-09-23.fasta'};
+fasta.db = cellfun(@(data) dirc.Input+data,fasta.db,'uni',false);
+fasta.fastaseq = dirc.Input +"/Seq.fasta";
+fasta.pdb = dirc.Input +"/PDB.fasta";
 %% Break database to smaller unites
 loc.a = dirc.Database+'Database_'+version.Input+'_FrameOne.mat'; %% database location for reading frame three
 loc.b = dirc.Database+'Database_'+version.Input+'_FrameTwo.mat'; %% database location for reading frame two
