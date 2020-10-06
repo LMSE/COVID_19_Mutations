@@ -1,4 +1,5 @@
-function Mutant = LocateMutants(SetSeq ,AlignVector,PDB_file)
+function Mutant = LocateMutants(SetSeq ,AlignVector)
+    global fasta
     tic
     check = {':',' '};
     AlignVector = cellfun(@(data) data{1} , AlignVector,'UniformOutput',false);
@@ -16,7 +17,7 @@ function Mutant = LocateMutants(SetSeq ,AlignVector,PDB_file)
             lag = strfind(SetSeq,AlignVector{i}(1,1:SetPoint(1)-1));
         end
         % adjustment of Pdb
-        if isfile(PDB_file)
+        if isfile(fasta.pdb)
             pdb = fastaread(PDB_file);
             pdb_lag = strfind(pdb.Sequence,SetSeq);
             lag = lag +pdb_lag-1;

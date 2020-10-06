@@ -9,19 +9,9 @@ function database = CreateDatabase()
         disp(" Loading %s database",fasta.db);
         
         FastaDb = fastaread(fasta.db);
+        %% Generating reading frames
         m = length(FastaDb);
         n = 1;
-        
-        %% check for subset consideration
-        comment = sprintf("Gisaid Database size : %d by %d",n,m);
-        fprintf(comment);
-        part = input("\nConsider a subset of the database? [y,n]",'s');
-        
-        if part == 'y'
-            n = input("Enter starting index :");
-            m = input("Enter final index :");
-        end
-        %% Generating reading frames
         SequenceDb = cell(m,1);
         HeaderDb = cell(m,1);
         parfor i=1:m
@@ -44,12 +34,36 @@ function database = CreateDatabase()
         disp("Frame Two is generated successfully");
         ProteinDbF3 = cellfun(@(x) nt2aa(x(1,3:end),'ACGTOnly',false,'AlternativeStartCodons',false),SequenceDb,'UniformOutput',false);
         disp("Frame Three is generated successfully");
+        
         % Creating the database
         database.FrameOne =  ProteinDbF1;
         database.FrameTwo =  ProteinDbF2;
         database.FrameThree =  ProteinDbF3;
         database.NTSeq = SequenceDb;
         database.Header = HeaderDb;
+        % adjusting the value of n and m after data curation and gap removal
+        n = 1;
+        m = length(database.NTSeq);
+        flag = 1; %% reading frames are generated
+        
+        %% Saving reading frames
+        db_a = database.FrameOne;
+        db_b = database.FrameTwo;
+        db_c = database.FrameThree;
+        db_d1 = database.NTSeq(1:ceil(numel(db_a)/3),1);
+        db_d2 = database.NTSeq(ceil(numel(db_a)/3)+1:ceil(numel(db_a)/3*2),1);
+        db_d3 = database.NTSeq(ceil(numel(db_a)/3*2)+1:end,1);
+        db_e = database.Header;
+        
+        % saving the reading frames
+        save(loc.a,"db_a");
+        save(loc.b,"db_b");
+        save(loc.c,"db_c");
+        save(loc.d{1},"db_d1");
+        save(loc.d{2},"db_d2");
+        save(loc.d{3},"db_d3");
+        save(loc.e,"db_e");
+        disp("Reading frames are saved");
         
     elseif flag == 1 %% reading frames exists, loading them
         disp("Loading Reading frames ...")
@@ -61,12 +75,15 @@ function database = CreateDatabase()
         load(loc.d{3});
         load(loc.e);
         
-        database.FrameOne = db_a; database.FrameTwo = db_b; database.FrameThree = db_c;
+        database.FrameOne = db_a;
+        database.FrameTwo = db_b;
+        database.FrameThree = db_c;
         database.NTSeq = [db_d1;db_d2;db_d3];
         database.Header = db_e;
+        
         n = 1;
         m = length(database.NTSeq);
-        disp("Loaded!")
+        disp("Reading Frames are Loaded!")
     elseif flag == 2
         load(dirc.Output+"/"+result);
         database = db_copy4;

@@ -1,139 +1,135 @@
-clc; clear;
+% flag == 0 only the NT sequences are available!
+% flag == 1 the reading frames are generated!
+% flag ==2 Alignment results are generated!
+clc;
 setDirectories
-%% read covid fasta sequence
+global version Delimiter dirc fasta flag m n;
+%% read Input fasta files: Given Sequence and Given database
 block =  CreateSequence(fasta.fastaseq);
-%% Parsing the database extracted and cured from GISAID
-if isfile(loc1)
-    disp("Loading the database ...")
-    load(loc1);
-    load(loc2);
-    db.FrameOne = db_a.FrameOne; db.FrameTwo = db_a.FrameTwo;db.FrameThree = db_a.FrameThree;
-    db.Header = db_b.Header; db.NTSeq = db_b.NTSeq;
-    clear db_a;clear db_b;
-    disp("Loaded!")
-else
-    disp("Creating the database from fastafile...")
-    disp("This might take several minutes. Please wait")
-    db = CreateDatabase(dir.base+dir.data+dir.db);
-    disp("removing duplicates...");
-    disp("Created!")
-    db_a.FrameOne = db.FrameOne;db_a.FrameTwo = db.FrameTwo;db_a.FrameThree = db.FrameThree;
-    db_b.NTSeq = db.NTSeq; db_b.Header = db.Header;
-    save(loc1,"db_a");
-    save(loc2,"db_b");
-    clear db_a; clear db_b;
-    disp("saved in "+loc); 
+% flag =0;
+%% Curated data alreaady exists?
+if flag == 2
+    disp("Curated data already exists");
+    comment = sprintf("the starting sequence is %d and the end sequence is %d",n,m);
+    disp(comment);
+    part = input("Continue? [y,n]",'s');
+    if part == 'n'
+        flag =1;
+    end
 end
-[countEqu,db, indx_Equ] = CountEqual(block,db);
-clear loc; clear s;
-
-%% Pairwise Local Alignment
-% creating a sample to facilitate the calculation
-db_copy = db;
-n = 1;
-m = length(db.NTSeq);
-disp("Local Alignment using database subset")
-sprintf("Database size : %d %d",size(db.NTSeq))
-part = input(" Do you want to consider a subset of the database? [y,n]",'s');
-if part == 'y'
-    n = input("Enter starting index :");
-    m = input("Enter final index :");
-    db_copy.FrameOne = db.FrameOne(n:m,1);
-    db_copy.FrameTwo = db.FrameTwo(n:m,1);
-    db_copy.FrameThree = db.FrameThree(n:m,1);
-    db_copy.NTSeq = db.NTSeq(n:m,1);
-    db_copy.Header = db.Header(n:m,1);
-end
-%% Date and Country of sampling
-disp("Generating Date and Country");
-db_copy = Header2DateLocation(db_copy);
-%% adjusting Country and Date by their number of tests performed
-f4_adj = frequencyTable(db_copy.Date);
-f5_adj = frequencyTable(db_copy.Country);
-%% Amino Acid Local Alignment
-[db_copy2] = AalocalAlignment(block.BASeq,db_copy);
-%% Delete sequences that don't have full coverage in the binding domain
-[db_copy3, indx_fullCoverage] = DeleteNs(db_copy2);
-%% Deleting Ordinary records
-[db_copy4,countEqu] = DeleteOrdinary(db_copy3,db_copy3.Aalignment,countEqu);
-%% Nucleotide Local Alignment
-disp("Nucleotide Local Alignment")
-[db_copy4] = NtlocalAlignment(block.BNSeq,db_copy4);
-%% Spotting the mutations
-disp("Spoting Mutations in the amino acid sequence");
-db_copy4.AAMutation = LocateMutants(block.BASeq,db_copy4.Aalignment,loc4);
-disp("Spoting Mutations in the Nucleotide sequence");
-%%
-db_copy4.NTMutation = LocateMutants(block.BNSeq,db_copy4.NTAlignment,'');
-%%
-if isempty(db_copy4.NTSeq)
-    disp("No mutation found!");
-    return
-else
-    res  = dir.base+dir.data+"Result_db_"+version2+"_"+n+"_"+m+".mat";
-    sprintf("number of similar sequences: %d",countEqu);
+%% Load the database
+db = CreateDatabase();
+%% Control of variables
+if flag == 1 
+        %% check for subset consideration
+        comment = sprintf("Gisaid Database size : %d by %d",n,m);
+        fprintf(comment);
+        part = input("\nConsider a subset of the database for alignment? [y,n]",'s');
+        
+        if part == 'y'
+            n = input("Enter starting index :");
+            m = input("Enter final index :");
+            db.FrameOne = db.FrameOne(n:m,1);
+            db.FrameTwo = db.FrameTwo(n:m,1);
+            db.FrameThree = db.FrameThree(n:m,1);
+            db.NTSeq = db.NTSeq(n:m,1);
+            db.Header = db.Header(n:m,1);
+        end
+    [countEqu,db, indx_Equ] = CountEqual(block,db);
+    
+    disp("Extracting Date and Country of the reported Sequences");
+    db = Header2DateLocation(db);
+    
+    % Calculating the total number of tests performed at each Date and
+    % Country
+    T_tot_date = frequencyTable(db.Date);
+    T_tot_country = frequencyTable(db.Country);
+    
+    % Amino Acid Local Alignment
+    disp("Aligning Amino Acid Sequences")
+    db = AalocalAlignment(block.BASeq,db);
+    % Delete sequences that don't have full coverage in the binding domain
+    [db, indx_fullCoverage] = DeleteNs(db);
+    % Deleting Ordinary records
+    [db,countEqu] = DeleteOrdinary(db,db.Aalignment,countEqu);
+    
+    % Nucleotide Local Alignment
+    disp("Aligning Nucleotide sequences ... ")
+    db = NtlocalAlignment(block.BNSeq,db);
+    
+    % Spotting the mutations
+    disp("Spoting Mutations in the amino acid sequence");
+    db.AAMutation = LocateMutants(block.BASeq,db.Aalignment);
+    
+    disp("Spoting Mutations in the Nucleotide sequence");
+    db.NTMutation = LocateMutants(block.BNSeq,db.NTAlignment);
+    
+    comment = sprintf("number of similar sequences: %d",countEqu);
+    fprintf(comment);
+    
+    res  = dirc.Output+"\Result_db_"+version.Output+"_"+n+"_"+m+".mat";
     disp("Saving the result in "+ res);
-    save(res,"db_copy4");
+    save(res,"db");
+    flag = 2;
+elseif flag == 2 %% load the original data to normalize frequency
+    flag = 1;
+    db_norm = CreateDatabase();
+    
+    disp("Extracting Date and Country of the reported Sequences");
+    db_norm = Header2DateLocation(db_norm);
+    
+    % Calculating the total number of tests performed at each Date and
+    % Country
+    ft_date_tot = frequencyTable(db_norm.Date);
+    ft_country_tot = frequencyTable(db_norm.Country);
+    clear db_norm
 end
-%% Remove sequences which are extremelt dissimilar to the original sequence
-[db_copy4, OffNum] = ThresholdScore(db_copy4,30);
-m = m - OffNum;
+
+% Remove sequences which are extremelt dissimilar to the original sequence
+[db, OffNum] = ThresholdScore(db,30);
 disp(OffNum)
-%% Display frequency table of the location of mutation accured
-disp("Mutation frequency in the Nucleotide Seq");
-disp("Frequency table of the Location");
-f0 = frequencyTable(db_copy4.NTMutation.Loc);
-disp("Frequency table of the Mutation on the Given Sequence");
-frequencyTable(db_copy4.NTMutation.One)
-disp("Frequency table of the Mutation on the db Sequence");
-frequencyTable(db_copy4.NTMutation.Two)
-disp("Frequency table of the Mutation on pairs comprised on the Given Sequence and Location");
-f1 = frequencyTable(MergeCells(db_copy4.NTMutation.Two,Delimiter,db_copy4.NTMutation.Loc),Delimiter);
-disp(f1);
-disp("Mutation frequency in the Amino Acid Seq");
-disp("Frequency table of the Location");
-f3 = frequencyTable(db_copy4.AAMutation.Loc);
-disp("Frequency table of the Mutation on the Given Sequence");
-frequencyTable(db_copy4.AAMutation.One)
-disp("Frequency table of the Mutation on the db Sequence");
-frequencyTable(db_copy4.AAMutation.Two)
-disp("Frequency table of the Mutation on pairs comprised on the Given Sequence and Location");
-f2 = frequencyTable(MergeCells(db_copy4.AAMutation.Two,Delimiter,db_copy4.AAMutation.Loc),Delimiter);
-disp(f2);
 
-%% Date and country
-f4_elm = frequencyTable(db_copy4.Date);
-f5_elm = frequencyTable(db_copy4.Country);
+disp("Analyzing Identified Mutations ...");
+ft_NT_loc = frequencyTable(db.NTMutation.Loc);
+ft_AA_loc = frequencyTable(db.AAMutation.Loc);
 
-f4 = innerjoin(f4_elm,f4_adj,'LeftKeys',1,'RightKeys',1);
-f5 = innerjoin(f5_elm,f5_adj,'LeftKeys',1,'RightKeys',1);
+ft_NT_seq_loc = frequencyTable(MergeCells(db.NTMutation.Two,Delimiter,...
+    db.NTMutation.Loc),Delimiter);
+ft_AA_seq_loc = frequencyTable(MergeCells(db.AAMutation.Two,Delimiter,...
+    db.AAMutation.Loc),Delimiter);
 
-f4 = removevars(f4,{'Percent_f4_elm','Percent_f4_adj'});
-f5 = removevars(f5,{'Percent_f5_elm','Percent_f5_adj'});
-%%
-f4.Properties.VariableNames = {'Date' 'Mutants_number' 'Total_Tests'};
-f5.Properties.VariableNames = {'Country' 'Mutants_number' 'Total_Tests'};
-%% Printing mutations
-disp("Mutation in Nucleotide Seq");
-[t1,~] = printMutation(db_copy4.NTScore ,db_copy4.NTMutation,db_copy4.Date,...
-    db_copy4.Country,db_copy4.Header);
-disp(t1);
-disp("Mutation in Amino Acid Seq");
-[t2,t3] = printMutation(db_copy4.AAScore ,db_copy4.AAMutation,db_copy4.Date,...
-    db_copy4.Country,db_copy4.Header);
-disp(t2);   
-%%
+ft_date = frequencyTable(db.Date);
+ft_country = frequencyTable(db.Country);
+
+ft_date_norm = innerjoin(ft_date,ft_date_tot,'LeftKeys',1,'RightKeys',1);
+ft_country_norm = innerjoin(ft_country,ft_country_tot,'LeftKeys',1,'RightKeys',1);
+
+ft_date_norm = removevars(ft_date_norm,{'Percent_ft_date',...
+    'Percent_ft_date_tot'});
+ft_country_norm = removevars(ft_country_norm,{'Percent_ft_country',...
+    'Percent_ft_country_tot'});
+
+ft_date_norm.Properties.VariableNames = {'Date' 'Mutants_number' 'Total_Tests'};
+ft_country_norm.Properties.VariableNames = {'Country' 'Mutants_number' 'Total_Tests'};
+
+[t1,~] = printMutation(db.NTScore ,db.NTMutation,db.Date,...
+    db.Country,db.Header);
+
+[t2,~] = printMutation(db.AAScore ,db.AAMutation,db.Date,...
+    db.Country,db.Header);
+
 disp("saving Results...");
-% delete (dir.base+dir.data+"Mutations_"+version2+"_"+n+"_"+m+".xlsx");
-writetable(t1,dir.base+dir.data+"Mutations_"+version2+"_"+n+"_"+m+".xlsx",'Sheet','Nucleotide Seq','UseExcel',false);
-writetable(t2,dir.base+dir.data+"Mutations_"+version2+"_"+n+"_"+m+".xlsx",'Sheet','Amino Acid Seq','UseExcel',false);
-writetable(f1,dir.base+dir.data+"Mutations_"+version2+"_"+n+"_"+m+".xlsx",'Sheet','Nucleotide Frequency','UseExcel',false);
-writetable(f2,dir.base+dir.data+"Mutations_"+version2+"_"+n+"_"+m+".xlsx",'Sheet','Amino Acid Frequency','UseExcel',false);
-writetable(f0,dir.base+dir.data+"Mutations_"+version2+"_"+n+"_"+m+".xlsx",'Sheet','NT Location Frequency','UseExcel',false);
-writetable(f3,dir.base+dir.data+"Mutations_"+version2+"_"+n+"_"+m+".xlsx",'Sheet','AA Location Frequency','UseExcel',false);
-writetable(f4,dir.base+dir.data+"Mutations_"+version2+"_"+n+"_"+m+".xlsx",'Sheet','Date Frequency','UseExcel',false);
-writetable(f5,dir.base+dir.data+"Mutations_"+version2+"_"+n+"_"+m+".xlsx",'Sheet','Country Frequency','UseExcel',false);
+%% delete (dir.base+dir.data+"Mutations_"+version2+"_"+n+"_"+m+".xlsx");
+writetable(t1,dirc.Output+"\Mutations_"+version.Output+"_"+n+"_"+m+".xlsx",'Sheet','Nucleotide Seq','UseExcel',false);
+writetable(t2,dirc.Output+"\Mutations_"+version.Output+"_"+n+"_"+m+".xlsx",'Sheet','Amino Acid Seq','UseExcel',false);
+
+writetable(ft_NT_seq_loc,dirc.Output+"\Mutations_"+version.Output+"_"+n+"_"+m+".xlsx",'Sheet','Nucleotide Frequency','UseExcel',false);
+writetable(ft_AA_seq_loc,dirc.Output+"\Mutations_"+version.Output+"_"+n+"_"+m+".xlsx",'Sheet','Amino Acid Frequency','UseExcel',false);
+
+writetable(ft_NT_loc,dirc.Output+"\Mutations_"+version.Output+"_"+n+"_"+m+".xlsx",'Sheet','NT Location Frequency','UseExcel',false);
+writetable(ft_AA_loc,dirc.Output+"\Mutations_"+version.Output+"_"+n+"_"+m+".xlsx",'Sheet','AA Location Frequency','UseExcel',false);
+
+writetable(ft_date_norm,dirc.Output+"\Mutations_"+version.Output+"_"+n+"_"+m+".xlsx",'Sheet','Date Frequency','UseExcel',false);
+writetable(ft_country_norm,dirc.Output+"\Mutations_"+version.Output+"_"+n+"_"+m+".xlsx",'Sheet','Country Frequency','UseExcel',false);
 
 disp("done!");
-
-%%
