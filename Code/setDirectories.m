@@ -10,6 +10,7 @@ version.Output = 'V30'; %% the version for saving results
 Delimiter = "|";
 %% Setting up main directories
 currentFolder = strsplit(pwd,'\');
+disp(currentFolder)
 i = length(currentFolder);
 dirc.base = sprintf('%s/',currentFolder{1:i-1});
 disp(dirc.base)
