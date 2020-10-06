@@ -6,7 +6,7 @@ setDirectories
 global version Delimiter dirc fasta flag m n;
 %% read Input fasta files: Given Sequence and Given database
 block =  CreateSequence(fasta.fastaseq);
-% flag =0;
+flag =0;
 %% Curated data alreaady exists?
 if flag == 2
     disp("Curated data already exists");
@@ -36,8 +36,6 @@ if flag == 1
             db.Header = db.Header(n:m,1);
         end
         [countEqu,db, indx_Equ] = CountEqual(block,db);
-        n = 1;
-        m = length(database.NTSeq);
         
     disp("Extracting Date and Country of the reported Sequences");
     db = Header2DateLocation(db);
@@ -77,7 +75,7 @@ elseif flag == 2 %% load the original data to normalize frequency
     flag = 1;
     db_norm = CreateDatabase();
     
-    [countEqu,db, indx_Equ] = CountEqual(block,db);
+    [countEqu,db_norm,~] = CountEqual(block,db_norm);
     
     disp("Extracting Date and Country of the reported Sequences");
     db_norm = Header2DateLocation(db_norm);
@@ -86,9 +84,9 @@ elseif flag == 2 %% load the original data to normalize frequency
     % Country
     ft_date_tot = frequencyTable(db_norm.Date);
     ft_country_tot = frequencyTable(db_norm.Country);
-    clear db_norm
+%     clear db_norm
 end
-
+%%
 % Remove sequences which are extremelt dissimilar to the original sequence
 [db, OffNum] = ThresholdScore(db,30);
 disp(OffNum)

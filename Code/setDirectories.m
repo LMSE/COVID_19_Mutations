@@ -36,8 +36,7 @@ if exists(1)>0
     n = str2double(array{4});
 end
 %% Setting up input fasta files
-fasta.db = {'/gisaid_hcov.fasta'};
-fasta.db = cellfun(@(data) dirc.Input+data,fasta.db,'uni',false);
+fasta.db = dirc.Input + "/database.fasta";
 fasta.fastaseq = dirc.Input +"/Seq.fasta";
 fasta.pdb = dirc.Input +"/PDB.fasta";
 %% Break reading frames to smaller unites to save time

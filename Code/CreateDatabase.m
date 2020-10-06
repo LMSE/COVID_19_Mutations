@@ -6,7 +6,8 @@ function database = CreateDatabase()
     global loc fasta flag m n result dirc;
     
     if flag == 0 %% reading frames does not exists. generate them
-        disp(" Loading %s database",fasta.db);
+        comment = sprintf (" Loading %s database\n",fasta.db);
+        fprintf(comment);
         
         FastaDb = fastaread(fasta.db);
         %% Generating reading frames
@@ -22,8 +23,14 @@ function database = CreateDatabase()
         % Removing sequences which include gapes 
         SequenceDb = cellfun(@(x) upper(x),SequenceDb,'UniformOutput',false);
         % SequenceDb = SequenceDb(~cellfun(@(x) ismember('N',x),SequenceDb));
-        SequenceDb = SequenceDb(~cellfun(@(x) ismember('-',x),SequenceDb));
-        SequenceDb = SequenceDb(~cellfun(@(x) ismember(' ',x),SequenceDb));
+        
+        indx1 = cellfun(@(x) ismember('-',x),SequenceDb);
+        SequenceDb = SequenceDb(~indx1);
+        HeaderDb = HeaderDb(~indx1);
+        indx2 = cellfun(@(x) ismember(' ',x),SequenceDb);
+        HeaderDb = HeaderDb(~indx2);
+        SequenceDb = SequenceDb(~indx2);
+        clear indx1 indx2;
         % Coverting nucleotide Sequence to Amino Acid sequence
 
         disp("Generating Main Reading Frames for the input database ...")
@@ -80,6 +87,9 @@ function database = CreateDatabase()
         database.FrameThree = db_c;
         database.NTSeq = [db_d1;db_d2;db_d3];
         database.Header = db_e;
+        
+        n = 1;
+        m = length(database.NTSeq);
         
         disp("Reading Frames are Loaded!")
     elseif flag == 2
