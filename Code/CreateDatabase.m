@@ -81,8 +81,6 @@ function database = CreateDatabase()
         database.NTSeq = [db_d1;db_d2;db_d3];
         database.Header = db_e;
         
-        n = 1;
-        m = length(database.NTSeq);
         disp("Reading Frames are Loaded!")
     elseif flag == 2
         load(dirc.Output+"/"+result);

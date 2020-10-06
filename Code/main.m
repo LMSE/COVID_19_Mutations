@@ -35,8 +35,10 @@ if flag == 1
             db.NTSeq = db.NTSeq(n:m,1);
             db.Header = db.Header(n:m,1);
         end
-    [countEqu,db, indx_Equ] = CountEqual(block,db);
-    
+        [countEqu,db, indx_Equ] = CountEqual(block,db);
+        n = 1;
+        m = length(database.NTSeq);
+        
     disp("Extracting Date and Country of the reported Sequences");
     db = Header2DateLocation(db);
     
