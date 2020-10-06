@@ -77,6 +77,8 @@ elseif flag == 2 %% load the original data to normalize frequency
     flag = 1;
     db_norm = CreateDatabase();
     
+    [countEqu,db, indx_Equ] = CountEqual(block,db);
+    
     disp("Extracting Date and Country of the reported Sequences");
     db_norm = Header2DateLocation(db_norm);
     
