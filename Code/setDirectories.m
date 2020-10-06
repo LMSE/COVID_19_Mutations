@@ -12,6 +12,7 @@ Delimiter = "|";
 currentFolder = strsplit(pwd,'\');
 i = length(currentFolder);
 dirc.base = sprintf('%s/',currentFolder{1:i-1});
+disp(dirc.base)
 dirc.Input = dirc.base + "Input";
 dirc.Output = dirc.base + "Output";
 dirc.Database = dirc.Input + "/Database";

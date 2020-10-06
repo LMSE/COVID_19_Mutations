@@ -6,7 +6,6 @@ setDirectories
 global version Delimiter dirc fasta flag m n;
 %% read Input fasta files: Given Sequence and Given database
 block =  CreateSequence(fasta.fastaseq);
-flag =0;
 %% Curated data alreaady exists?
 if flag == 2
     disp("Curated data already exists");
