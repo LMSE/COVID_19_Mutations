@@ -41,8 +41,8 @@ if flag == 1
     
     % Calculating the total number of tests performed at each Date and
     % Country
-    T_tot_date = frequencyTable(db_standard.Date);
-    T_tot_country = frequencyTable(db_standard.Country);
+    ft_date_tot = frequencyTable(db_standard.Date);
+    ft_country_tot = frequencyTable(db_standard.Country);
     
     % Amino Acid Local Alignment
     disp("Aligning Amino Acid Sequences")
