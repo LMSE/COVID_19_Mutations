@@ -21,10 +21,11 @@ db_standard = CreateDatabase();
 %% Control of variables
 if flag == 1 
         %% check for subset consideration
-        comment = sprintf("Gisaid Database size : %d by %d",n,m);
+        comment = sprintf("Gisaid Database size : %d by %d \n",n,m);
         fprintf(comment);
-        part = input("\nConsider a subset of the database for alignment? [y,n]",'s');
-        
+        % part = input("\nConsider a subset of the database for alignment? [y,n]",'s');
+        % default
+        part = 'n';
         if part == 'y'
             n = input("Enter starting index :");
             m = input("Enter final index :");
@@ -57,6 +58,7 @@ if flag == 1
     
     % Deleting Ordinary records
     [db_standard,countEqu] = DeleteOrdinary(db_standard,db_standard.Aalignment,countEqu);
+    disp("total number of wild type sequences in the database: "+countEqu);
     
     % Nucleotide Local Alignment
     disp("Aligning Nucleotide sequences ... ")

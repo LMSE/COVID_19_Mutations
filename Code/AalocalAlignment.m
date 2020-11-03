@@ -30,6 +30,8 @@ function [db] = AalocalAlignment(seq,db)
         % compare the results of score to the index of the unavailble amino acid
         flag_final = ismember(indx,indx_unavailable_aa);
         
+        resAlign{i}.Alignment = [resAlign_1.Alignment;resAlign_2.Alignment; ...
+            resAlign_3.Alignment];
         resAlign{i}.Score = Score;
         resAlign{i}.Alignment = resAlign{i}.Alignment(indx);
         resAlign{i}.Flag = flag_final;

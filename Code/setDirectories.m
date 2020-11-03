@@ -13,7 +13,6 @@ currentFolder = strsplit(pwd,{'/','\'});
 disp(currentFolder)
 i = length(currentFolder);
 dirc.base = sprintf('%s/',currentFolder{1:i-1});
-disp(dirc.base)
 dirc.Input = dirc.base + "Input";
 dirc.Output = dirc.base + "Output";
 dirc.Database = dirc.Input + "/Database";
@@ -24,7 +23,7 @@ if ~exist(dirc.Database, 'dir')
    flag = 0; % Reading frames does not exists
 else
     if length({dir(dirc.Database).name})<= 2
-        flage = 0; % the database folder is empty
+        flag = 0; % the database folder is empty
     end
 end
 file = dir(dirc.Output+"/Result_db*");
@@ -38,7 +37,7 @@ if exists(1)>0
     n = str2double(array{4});
 end
 %% Setting up input fasta files
-fasta.db = dirc.Input + "/database.fasta";
+fasta.db = dirc.Input + "/gisaid_database.fasta";
 fasta.fastaseq = dirc.Input +"/Seq.fasta";
 fasta.pdb = dirc.Input +"/PDB.fasta";
 %% Break reading frames to smaller unites to save time

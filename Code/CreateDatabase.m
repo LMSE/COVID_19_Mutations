@@ -56,8 +56,8 @@ function database = CreateDatabase()
         % adjusting the value of n and m after data curation and gap removal
         n = 1;
         m = length(database.NTSeq);
-        diplay("the size of the database after removing low coverage sequences is "+m);
-        flag = 1; %% reading frames are generated
+        disp("the size of the database after removing low coverage sequences is "+m);
+        
         clear ProteinDbF1 ProteinDbF2 ProteinDbF3 SequenceDb HeaderDb;
         %% Saving reading frames
         Blank = numel(database.FrameOne);
@@ -101,7 +101,7 @@ function database = CreateDatabase()
         save(loc.e{2},"db_e2");
         
         disp("Reading frames are saved");
-        
+        flag = 1; %% reading frames are generated
     elseif flag == 1 %% reading frames exists, loading them
         disp("Loading Reading frames ...")
         load(loc.a{1});
