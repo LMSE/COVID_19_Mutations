@@ -22,7 +22,8 @@ if ~exist(dirc.Database, 'dir')
    mkdir(dirc.Database)
    flag = 0; % Reading frames does not exists
 else
-    if length({dir(dirc.Database).name})<= 2
+    check = dir(dirc.Database).name;
+    if length({check})<= 2
         flag = 0; % the database folder is empty
     end
 end
