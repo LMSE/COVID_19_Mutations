@@ -20,7 +20,7 @@ function database = CreateDatabase()
             SequenceDb{i,1} = FastaDb(i).Sequence;
             HeaderDb{i,1} = FastaDb(i).Header;
         end
-        disp("Curating the Data ...")
+        disp("Curating the Data and removing duplicates ...")
         % Removing sequences which include gapes 
         SequenceDb = cellfun(@(x) upper(x),SequenceDb,'UniformOutput',false);
         % SequenceDb = SequenceDb(~cellfun(@(x) ismember('N',x),SequenceDb));
@@ -31,7 +31,11 @@ function database = CreateDatabase()
         indx2 = cellfun(@(x) ismember(' ',x),SequenceDb);
         HeaderDb = HeaderDb(~indx2);
         SequenceDb = SequenceDb(~indx2);
-        clear indx1 indx2;
+        
+        [HeaderDb,indx3,~] = unique(HeaderDb);
+        SequenceDb = SequenceDb(indx3);
+        
+        clear indx1 indx2 indx3;
         % Coverting nucleotide Sequence to Amino Acid sequence
 
         disp("Generating Main Reading Frames for the input database ...")
