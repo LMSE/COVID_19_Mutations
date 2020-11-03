@@ -42,13 +42,18 @@ fasta.db = dirc.Input + "/database.fasta";
 fasta.fastaseq = dirc.Input +"/Seq.fasta";
 fasta.pdb = dirc.Input +"/PDB.fasta";
 %% Break reading frames to smaller unites to save time
-loc.a = dirc.Database+'/Database_'+version.Input+'_FrameOne.mat'; %% database location for reading frame three
-loc.b = dirc.Database+'/Database_'+version.Input+'_FrameTwo.mat'; %% database location for reading frame two
-loc.c = dirc.Database+'/Database_'+version.Input+'_FrameThree.mat'; %% database location for reading frame one
+loc.a = {dirc.Database+'/Database_'+version.Input+'_FrameOne1.mat';
+    dirc.Database+'/Database_'+version.Input+'_FrameOne2.mat'};%% database location for reading frame three
+loc.b = {dirc.Database+'/Database_'+version.Input+'_FrameTwo1.mat';
+    dirc.Database+'/Database_'+version.Input+'_FrameTwo2.mat'};%% database location for reading frame two
+loc.c = {dirc.Database+'/Database_'+version.Input+'_FrameThree1.mat';
+    dirc.Database+'/Database_'+version.Input+'_FrameThree2.mat'}; %% database location for reading frame one
 loc.d = {dirc.Database+'/Database_'+version.Input+'_NTSeq1.mat'; %% database location for NT seq
  dirc.Database+'/Database_'+version.Input+'_NTSeq2.mat'; %% database location for NT seq
- dirc.Database+'/Database_'+version.Input+'_NTSeq3.mat'}; %% database location for NT seq
-loc.e = dirc.Database+'/Database_'+version.Input+'_Header.mat'; %% database location of Header
+ dirc.Database+'/Database_'+version.Input+'_NTSeq3.mat';
+ dirc.Database+'/Database_'+version.Input+'_NTSeq4.mat'}; %% database location for NT seq
+loc.e = {dirc.Database+'/Database_'+version.Input+'_Header1.mat';
+    dirc.Database+'/Database_'+version.Input+'_Header2.mat'};%% database location of Header
 %% clear variables
 clear currentFolder file exists i;
 

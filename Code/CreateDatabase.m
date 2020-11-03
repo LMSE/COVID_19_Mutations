@@ -52,41 +52,74 @@ function database = CreateDatabase()
         n = 1;
         m = length(database.NTSeq);
         flag = 1; %% reading frames are generated
-        
+        clear ProteinDbF1 ProteinDbF2 ProteinDbF3 SequenceDb HeaderDb;
         %% Saving reading frames
-        db_a = database.FrameOne;
-        db_b = database.FrameTwo;
-        db_c = database.FrameThree;
-        db_d1 = database.NTSeq(1:ceil(numel(db_a)/3),1);
-        db_d2 = database.NTSeq(ceil(numel(db_a)/3)+1:ceil(numel(db_a)/3*2),1);
-        db_d3 = database.NTSeq(ceil(numel(db_a)/3*2)+1:end,1);
-        db_e = database.Header;
+        Blank = numel(database.FrameOne);
+        Q1 = ceil(Blank/4);
+        Q2 = Q1*2;
+        Q3 = Q1*3;
+        
+        db_a1 = database.FrameOne(1:Q2,1);
+        db_a2 = database.FrameOne(Q2+1:end,1);
+        
+        db_b1 = database.FrameTwo(1:Q2,1);
+        db_b2 = database.FrameTwo(Q2+1:end,1);
+        
+        db_c1 = database.FrameThree(1:Q2,1);
+        db_c2 = database.FrameThree(Q2+1:end,1);
+        
+        db_d1 = database.NTSeq(1:Q1,1);
+        db_d2 = database.NTSeq(Q1+1:Q2,1);
+        db_d3 = database.NTSeq(Q2+1:Q3,1);
+        db_d4 = database.NTSeq(Q3+1:end,1);
+        
+        db_e1 = database.Header(1:Q2,1);
+        db_e2 = database.Header(Q2+1:end,1);
         
         % saving the reading frames
-        save(loc.a,"db_a");
-        save(loc.b,"db_b");
-        save(loc.c,"db_c");
+        save(loc.a{1},"db_a1");
+        save(loc.a{2},"db_a2");
+        
+        save(loc.b{1},"db_b1");
+        save(loc.b{2},"db_b2");
+        
+        save(loc.c{1},"db_c1");
+        save(loc.c{2},"db_c2");
+        
         save(loc.d{1},"db_d1");
         save(loc.d{2},"db_d2");
         save(loc.d{3},"db_d3");
-        save(loc.e,"db_e");
+        save(loc.d{4},"db_d4");
+        
+        save(loc.e{1},"db_e1");
+        save(loc.e{2},"db_e2");
+        
         disp("Reading frames are saved");
         
     elseif flag == 1 %% reading frames exists, loading them
         disp("Loading Reading frames ...")
-        load(loc.a);
-        load(loc.b);
-        load(loc.c);
+        load(loc.a{1});
+        load(loc.a{2});
+        
+        load(loc.b{1});
+        load(loc.b{2});
+        
+        load(loc.c{1});
+        load(loc.c{2});
+        
         load(loc.d{1});
         load(loc.d{2});
         load(loc.d{3});
-        load(loc.e);
+        load(loc.d{4});
         
-        database.FrameOne = db_a;
-        database.FrameTwo = db_b;
-        database.FrameThree = db_c;
-        database.NTSeq = [db_d1;db_d2;db_d3];
-        database.Header = db_e;
+        load(loc.e{1});
+        load(loc.e{2});
+        
+        database.FrameOne = [db_a1;db_a2];
+        database.FrameTwo = [db_b1;db_b2];
+        database.FrameThree = [db_c1;db_c2];
+        database.NTSeq = [db_d1;db_d2;db_d3;db_d4];
+        database.Header = [db_e1;db_e2];
         
         n = 1;
         m = length(database.NTSeq);
