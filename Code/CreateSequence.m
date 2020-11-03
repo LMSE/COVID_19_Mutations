@@ -14,6 +14,6 @@ function Block  = CreateSequence(DirectoryOrNCBI)
     Protein = nt2aa(Sequence,'AlternativeStartCodons',false);
     Block.NTSeq = Sequence;
     Block.AASeq = Protein;
-    Block.BNSeq = Block.NTSeq(1,22544:23146);
+    Block.BNSeq = Block.NTSeq(1,22544:23407);
     Block.BASeq = nt2aa(Block.BNSeq,'AlternativeStartCodons',false);
 end
