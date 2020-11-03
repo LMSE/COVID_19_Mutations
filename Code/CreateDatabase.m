@@ -127,7 +127,7 @@ function database = CreateDatabase()
         disp("Reading Frames are Loaded!")
     elseif flag == 2
         load(dirc.Output+"/"+result);
-        database = db_copy4;
-        clear db_copy4;
+        database = db_standard;
+        clear db_standard;
     end 
 end

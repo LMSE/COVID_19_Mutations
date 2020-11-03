@@ -17,7 +17,7 @@ if flag == 2
     end
 end
 %% Load the database
-db = CreateDatabase();
+db_standard = CreateDatabase();
 %% Control of variables
 if flag == 1 
         %% check for subset consideration
@@ -28,40 +28,40 @@ if flag == 1
         if part == 'y'
             n = input("Enter starting index :");
             m = input("Enter final index :");
-            db.FrameOne = db.FrameOne(n:m,1);
-            db.FrameTwo = db.FrameTwo(n:m,1);
-            db.FrameThree = db.FrameThree(n:m,1);
-            db.NTSeq = db.NTSeq(n:m,1);
-            db.Header = db.Header(n:m,1);
+            db_standard.FrameOne = db_standard.FrameOne(n:m,1);
+            db_standard.FrameTwo = db_standard.FrameTwo(n:m,1);
+            db_standard.FrameThree = db_standard.FrameThree(n:m,1);
+            db_standard.NTSeq = db_standard.NTSeq(n:m,1);
+            db_standard.Header = db_standard.Header(n:m,1);
         end
-        [countEqu,db, indx_Equ] = CountEqual(block,db);
+        [countEqu,db_standard, indx_Equ] = CountEqual(block,db_standard);
         
     disp("Extracting Date and Country of the reported Sequences");
-    db = Header2DateLocation(db);
+    db_standard = Header2DateLocation(db_standard);
     
     % Calculating the total number of tests performed at each Date and
     % Country
-    T_tot_date = frequencyTable(db.Date);
-    T_tot_country = frequencyTable(db.Country);
+    T_tot_date = frequencyTable(db_standard.Date);
+    T_tot_country = frequencyTable(db_standard.Country);
     
     % Amino Acid Local Alignment
     disp("Aligning Amino Acid Sequences")
-    db = AalocalAlignment(block.BASeq,db);
+    db_standard = AalocalAlignment(block.BASeq,db_standard);
     % Delete sequences that don't have full coverage in the binding domain
-    [db, indx_fullCoverage] = DeleteNs(db);
+    [db_standard, indx_fullCoverage] = DeleteNs(db_standard);
     % Deleting Ordinary records
-    [db,countEqu] = DeleteOrdinary(db,db.Aalignment,countEqu);
+    [db_standard,countEqu] = DeleteOrdinary(db_standard,db_standard.Aalignment,countEqu);
     
     % Nucleotide Local Alignment
     disp("Aligning Nucleotide sequences ... ")
-    db = NtlocalAlignment(block.BNSeq,db);
+    db_standard = NtlocalAlignment(block.BNSeq,db_standard);
     
     % Spotting the mutations
     disp("Spoting Mutations in the amino acid sequence");
-    db.AAMutation = LocateMutants(block.BASeq,db.Aalignment);
+    db_standard.AAMutation = LocateMutants(block.BASeq,db_standard.Aalignment);
     
     disp("Spoting Mutations in the Nucleotide sequence");
-    db.NTMutation = LocateMutants(block.BNSeq,db.NTAlignment);
+    db_standard.NTMutation = LocateMutants(block.BNSeq,db_standard.NTAlignment);
     
     comment = sprintf("number of similar sequences: %d",countEqu);
     fprintf(comment);
@@ -87,20 +87,20 @@ elseif flag == 2 %% load the original data to normalize frequency
 end
 %%
 % Remove sequences which are extremelt dissimilar to the original sequence
-[db, OffNum] = ThresholdScore(db,30);
+[db_standard, OffNum] = ThresholdScore(db_standard,30);
 disp(OffNum)
 
 disp("Analyzing Identified Mutations ...");
-ft_NT_loc = frequencyTable(db.NTMutation.Loc);
-ft_AA_loc = frequencyTable(db.AAMutation.Loc);
+ft_NT_loc = frequencyTable(db_standard.NTMutation.Loc);
+ft_AA_loc = frequencyTable(db_standard.AAMutation.Loc);
 
-ft_NT_seq_loc = frequencyTable(MergeCells(db.NTMutation.Two,Delimiter,...
-    db.NTMutation.Loc),Delimiter);
-ft_AA_seq_loc = frequencyTable(MergeCells(db.AAMutation.Two,Delimiter,...
-    db.AAMutation.Loc),Delimiter);
+ft_NT_seq_loc = frequencyTable(MergeCells(db_standard.NTMutation.Two,Delimiter,...
+    db_standard.NTMutation.Loc),Delimiter);
+ft_AA_seq_loc = frequencyTable(MergeCells(db_standard.AAMutation.Two,Delimiter,...
+    db_standard.AAMutation.Loc),Delimiter);
 
-ft_date = frequencyTable(db.Date);
-ft_country = frequencyTable(db.Country);
+ft_date = frequencyTable(db_standard.Date);
+ft_country = frequencyTable(db_standard.Country);
 
 ft_date_norm = innerjoin(ft_date,ft_date_tot,'LeftKeys',1,'RightKeys',1);
 ft_country_norm = innerjoin(ft_country,ft_country_tot,'LeftKeys',1,'RightKeys',1);
@@ -113,11 +113,11 @@ ft_country_norm = removevars(ft_country_norm,{'Percent_ft_country',...
 ft_date_norm.Properties.VariableNames = {'Date' 'Mutants_number' 'Total_Tests'};
 ft_country_norm.Properties.VariableNames = {'Country' 'Mutants_number' 'Total_Tests'};
 
-[t1,~] = printMutation(db.NTScore ,db.NTMutation,db.Date,...
-    db.Country,db.Header);
+[t1,~] = printMutation(db_standard.NTScore ,db_standard.NTMutation,db_standard.Date,...
+    db_standard.Country,db_standard.Header);
 
-[t2,~] = printMutation(db.AAScore ,db.AAMutation,db.Date,...
-    db.Country,db.Header);
+[t2,~] = printMutation(db_standard.AAScore ,db_standard.AAMutation,db_standard.Date,...
+    db_standard.Country,db_standard.Header);
 
 disp("saving Results...");
 %% delete (dir.base+dir.data+"Mutations_"+version2+"_"+n+"_"+m+".xlsx");
