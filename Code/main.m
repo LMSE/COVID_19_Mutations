@@ -34,21 +34,27 @@ if flag == 1
             db_standard.NTSeq = db_standard.NTSeq(n:m,1);
             db_standard.Header = db_standard.Header(n:m,1);
         end
+        
         [countEqu,db_standard, indx_Equ] = CountEqual(block,db_standard);
+        disp("the NCBI Sequence is repeated "+countEqu+" times in the Gisaid database");
         
     disp("Extracting Date and Country of the reported Sequences");
     db_standard = Header2DateLocation(db_standard);
     
-    % Calculating the total number of tests performed at each Date and
-    % Country
-    ft_date_tot = frequencyTable(db_standard.Date);
-    ft_country_tot = frequencyTable(db_standard.Country);
+    
+ 
     
     % Amino Acid Local Alignment
     disp("Aligning Amino Acid Sequences")
     db_standard = AalocalAlignment(block.BASeq,db_standard);
     % Delete sequences that don't have full coverage in the binding domain
     [db_standard, indx_fullCoverage] = DeleteNs(db_standard);
+    disp("number of deleted sequences due to the existance of a un categorized amino acid"+indx_fullCoverage);
+    % Calculating the total number of tests performed at each Date and
+    % Country
+    ft_date_tot = frequencyTable(db_standard.Date);
+    ft_country_tot = frequencyTable(db_standard.Country);
+    
     % Deleting Ordinary records
     [db_standard,countEqu] = DeleteOrdinary(db_standard,db_standard.Aalignment,countEqu);
     

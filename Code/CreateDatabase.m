@@ -12,6 +12,7 @@ function database = CreateDatabase()
         FastaDb = fastaread(fasta.db);
         %% Generating reading frames
         m = length(FastaDb);
+        disp("the original database size is "+m);
         n = 1;
         SequenceDb = cell(m,1);
         HeaderDb = cell(m,1);
@@ -51,6 +52,7 @@ function database = CreateDatabase()
         % adjusting the value of n and m after data curation and gap removal
         n = 1;
         m = length(database.NTSeq);
+        diplay("the size of the database after removing low coverage sequences is "+m);
         flag = 1; %% reading frames are generated
         clear ProteinDbF1 ProteinDbF2 ProteinDbF3 SequenceDb HeaderDb;
         %% Saving reading frames
