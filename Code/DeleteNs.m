@@ -1,13 +1,18 @@
 function [db,nonEqu_indx] = DeleteNs(db)
+
 if isfield(db,'Aalignment')
-    indx = find(cellfun(@(data) ~ismember('X',data{1}(3,:)),db.Aalignment));
+    %indx = find(cellfun(@(data) ~ismember('X',data{1}(3,:)),db.Aalignment));
+    
+    indx = find(cell2mat(db.Flag));
+    
+    db.Flag = db.Flag(inx);
     db.FrameOne = db.FrameOne(indx);
     db.FrameTwo = db.FrameTwo(indx);
     db.FrameThree = db.FrameThree(indx);
     db.Header = db.Header(indx);
     db.NTSeq = db.NTSeq(indx);
     db.Country = db.Country(indx);
-    db.Date=db.Date(indx);
+    db.Date = db.Date(indx);
 
     db.AAScore = db.AAScore(indx);
     db.Aalignment = db.Aalignment(indx);
