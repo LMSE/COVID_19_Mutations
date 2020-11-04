@@ -36,7 +36,7 @@ function [db] = AalocalAlignment(seq,db)
         resAlign{i}.Alignment = resAlign{i}.Alignment(indx);
         resAlign{i}.Flag = flag_final;
         
-        if mod(i,100) == 0
+        if mod(i,10000) == 0
             disp(i)
             toc
             tic
