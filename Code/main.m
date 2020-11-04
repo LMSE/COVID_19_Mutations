@@ -74,7 +74,7 @@ if flag == 1
     comment = sprintf("number of similar sequences: %d",countEqu);
     fprintf(comment);
     
-    res  = dirc.Output+"\Result_db_"+version.Output+"_"+n+"_"+m+".mat";
+    res  = dirc.Output+"/Result_db_"+version.Output+"_"+n+"_"+m+".mat";
     disp("Saving the result in "+ res);
     save(res,"db");
     flag = 2;
@@ -129,16 +129,16 @@ ft_country_norm.Properties.VariableNames = {'Country' 'Mutants_number' 'Total_Te
 
 disp("saving Results...");
 %% delete (dir.base+dir.data+"Mutations_"+version2+"_"+n+"_"+m+".xlsx");
-writetable(t1,dirc.Output+"\Mutations_"+version.Output+"_"+n+"_"+m+".xlsx",'Sheet','Nucleotide Seq','UseExcel',false);
-writetable(t2,dirc.Output+"\Mutations_"+version.Output+"_"+n+"_"+m+".xlsx",'Sheet','Amino Acid Seq','UseExcel',false);
+writetable(t1,dirc.Output+"/Mutations_"+version.Output+"_"+n+"_"+m+".xlsx",'Sheet','Nucleotide Seq','UseExcel',false);
+writetable(t2,dirc.Output+"/Mutations_"+version.Output+"_"+n+"_"+m+".xlsx",'Sheet','Amino Acid Seq','UseExcel',false);
 
-writetable(ft_NT_seq_loc,dirc.Output+"\Mutations_"+version.Output+"_"+n+"_"+m+".xlsx",'Sheet','Nucleotide Frequency','UseExcel',false);
-writetable(ft_AA_seq_loc,dirc.Output+"\Mutations_"+version.Output+"_"+n+"_"+m+".xlsx",'Sheet','Amino Acid Frequency','UseExcel',false);
+writetable(ft_NT_seq_loc,dirc.Output+"/Mutations_"+version.Output+"_"+n+"_"+m+".xlsx",'Sheet','Nucleotide Frequency','UseExcel',false);
+writetable(ft_AA_seq_loc,dirc.Output+"/Mutations_"+version.Output+"_"+n+"_"+m+".xlsx",'Sheet','Amino Acid Frequency','UseExcel',false);
 
-writetable(ft_NT_loc,dirc.Output+"\Mutations_"+version.Output+"_"+n+"_"+m+".xlsx",'Sheet','NT Location Frequency','UseExcel',false);
-writetable(ft_AA_loc,dirc.Output+"\Mutations_"+version.Output+"_"+n+"_"+m+".xlsx",'Sheet','AA Location Frequency','UseExcel',false);
+writetable(ft_NT_loc,dirc.Output+"/Mutations_"+version.Output+"_"+n+"_"+m+".xlsx",'Sheet','NT Location Frequency','UseExcel',false);
+writetable(ft_AA_loc,dirc.Output+"/Mutations_"+version.Output+"_"+n+"_"+m+".xlsx",'Sheet','AA Location Frequency','UseExcel',false);
 
-writetable(ft_date_norm,dirc.Output+"\Mutations_"+version.Output+"_"+n+"_"+m+".xlsx",'Sheet','Date Frequency','UseExcel',false);
-writetable(ft_country_norm,dirc.Output+"\Mutations_"+version.Output+"_"+n+"_"+m+".xlsx",'Sheet','Country Frequency','UseExcel',false);
+writetable(ft_date_norm,dirc.Output+"/Mutations_"+version.Output+"_"+n+"_"+m+".xlsx",'Sheet','Date Frequency','UseExcel',false);
+writetable(ft_country_norm,dirc.Output+"/Mutations_"+version.Output+"_"+n+"_"+m+".xlsx",'Sheet','Country Frequency','UseExcel',false);
 
 disp("done!");
