@@ -19,8 +19,10 @@ function Mutant = LocateMutants(SetSeq ,AlignVector)
         % adjustment of Pdb
         if isfile(fasta.pdb)
             pdb = fastaread(fasta.pdb);
-            pdb_lag = strfind(pdb.Sequence,SetSeq)
-            lag = lag +pdb_lag-1
+            pdb_lag = strfind(pdb.Sequence,SetSeq);
+            if ~isempty(pdb_lag)
+                lag = lag +pdb_lag-1;
+            end
         end
         Gaps = strfind(AlignVector{i}(1,:),'-')';
         OffSet = lag(1)-1;
