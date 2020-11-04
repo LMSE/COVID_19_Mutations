@@ -50,7 +50,7 @@ if flag == 1
     db_standard = AalocalAlignment(block.BASeq,db_standard);
     % Delete sequences that don't have full coverage in the binding domain
     [db_standard, indx_fullCoverage] = DeleteNs(db_standard);
-    disp("number of deleted sequences due to the existance of a un categorized amino acid"+indx_fullCoverage);
+    disp("number of deleted sequences due to the existance of a un categorized amino acid" + numel(indx_fullCoverage));
     % Calculating the total number of tests performed at each Date and
     % Country
     ft_date_tot = frequencyTable(db_standard.Date);
