@@ -86,6 +86,9 @@ elseif flag == 2 %% load the original data to normalize frequency
     
     disp("Extracting Date and Country of the reported Sequences");
     db_norm = Header2DateLocation(db_norm);
+    db_norm = AalocalAlignment(block.BASeq,db_norm);
+    % Delete sequences that don't have full coverage in the binding domain
+    [db_norm, indx_fullCoverage] = DeleteNs(db_norm);
     
     % Calculating the total number of tests performed at each Date and
     % Country
