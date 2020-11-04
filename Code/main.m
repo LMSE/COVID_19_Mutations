@@ -71,12 +71,12 @@ if flag == 1
     disp("Spoting Mutations in the Nucleotide sequence");
     db_standard.NTMutation = LocateMutants(block.BNSeq,db_standard.NTAlignment);
     
-    comment = sprintf("number of similar sequences: %d",countEqu);
+    comment = sprintf("number of similar sequences: %d \n",countEqu);
     fprintf(comment);
     
     res  = dirc.Output+"/Result_db_"+version.Output+"_"+n+"_"+m+".mat";
     disp("Saving the result in "+ res);
-    save(res,"db");
+    save(res,"db_standard");
     flag = 2;
 elseif flag == 2 %% load the original data to normalize frequency
     flag = 1;
