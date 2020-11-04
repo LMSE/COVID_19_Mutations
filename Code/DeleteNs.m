@@ -5,7 +5,7 @@ if isfield(db,'Aalignment')
     
     indx = find(cell2mat(db.Flag));
     
-    db.Flag = db.Flag(inx);
+    db.Flag = db.Flag(indx);
     db.FrameOne = db.FrameOne(indx);
     db.FrameTwo = db.FrameTwo(indx);
     db.FrameThree = db.FrameThree(indx);
