@@ -58,7 +58,7 @@ if flag == 1
     
     % Deleting Ordinary records
     [db_standard,countEqu] = DeleteOrdinary(db_standard,db_standard.Aalignment,countEqu);
-    disp("total number of wild type sequences in the database: "+countEqu);
+    disp("total number of non-mutated sequences in the database: "+countEqu);
     
     % Nucleotide Local Alignment
     disp("Aligning Nucleotide sequences ... ")
