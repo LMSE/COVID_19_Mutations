@@ -14,14 +14,15 @@ function [db] = AalocalAlignment(seq,db)
     
     for i=1:length(db.NTSeq)
 
-        flag1 = aminolookup_defined(db.FrameOne{i});
-        flag2 = aminolookup_defined(db.FrameTwo{i});
-        flag3 = aminolookup_defined(db.FrameThree{i});
-        flag = [flag1;flag2;flag3];
             
         resAlign_1 = localalign(seq,db.FrameOne{i},'ScoringMatrix','pam250');
         resAlign_2 = localalign(seq,db.FrameTwo{i},'ScoringMatrix','pam250');
         resAlign_3 = localalign(seq,db.FrameThree{i},'ScoringMatrix','pam250');
+        
+        flag1 = aminolookup_defined(resAlign_1.Alignment{1}(3,:));
+        flag2 = aminolookup_defined(resAlign_2.Alignment{1}(3,:));
+        flag3 = aminolookup_defined(resAlign_3.Alignment{1}(3,:));
+        flag = [flag1;flag2;flag3];
         
         [Score, indx] = max([resAlign_1.Score;resAlign_2.Score;resAlign_3.Score]);
         
