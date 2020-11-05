@@ -3,7 +3,7 @@ function [db,nonEqu_indx] = DeleteNs(db)
 if isfield(db,'Aalignment')
     %indx = find(cellfun(@(data) ~ismember('X',data{1}(3,:)),db.Aalignment));
     
-    indx = find(cell2mat(db.Flag));
+    indx = find(~cell2mat(db.Flag));
     
     db.Flag = db.Flag(indx);
     db.FrameOne = db.FrameOne(indx);

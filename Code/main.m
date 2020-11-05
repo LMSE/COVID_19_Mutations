@@ -97,8 +97,8 @@ elseif flag == 2 %% load the original data to normalize frequency
 %     clear db_norm
 end
 %%
-% Remove sequences which are extremelt dissimilar to the original sequence
-[db_standard, OffNum] = ThresholdScore(db_standard,30);
+% Remove sequences which are extremely dissimilar to the original sequence
+[db_standard, OffNum] = ThresholdScore(db_standard,97);
 disp(OffNum)
 
 disp("Analyzing Identified Mutations ...");
