@@ -3,7 +3,7 @@ function [db, OffNumbers] = ThresholdScore(db, Threshold)
 % Filterin our those results which are completly off, 
 % meaning that they show lots of mutation on their structure.
 
-    indx = cellfun(@(data) data>= Threshold,db.AAScore);
+    indx = cellfun(@(data) data>= Threshold,db.NTScore);
     
     OffNumbers = length(indx);
     db.FrameOne = db.FrameOne(indx~=0);
