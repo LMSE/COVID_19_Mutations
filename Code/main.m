@@ -98,50 +98,52 @@ elseif flag == 2 %% load the original data to normalize frequency
 end
 %%
 % Remove sequences which are extremely dissimilar to the original sequence
-[db_standard, OffNum] = ThresholdScore(db_standard,97);
-disp(OffNum)
+[db_1, db_2, OffNum] = ThresholdScore(db,97);
+disp("number of highly mutated sequences: "+ OffNum);
 
-disp("Analyzing Identified Mutations ...");
-ft_NT_loc = frequencyTable(db_standard.NTMutation.Loc);
-ft_AA_loc = frequencyTable(db_standard.AAMutation.Loc);
+db_list = {db_1;db_2};
+for i=1:length(db_list)
+    db_test = db_list{i};
+    disp("Analyzing Identified Mutations ...");
+    ft_NT_loc = frequencyTable(db_test.NTMutation.Loc);
+    ft_AA_loc = frequencyTable(db_test.AAMutation.Loc);
 
-ft_NT_seq_loc = frequencyTable(MergeCells(db_standard.NTMutation.Two,Delimiter,...
-    db_standard.NTMutation.Loc),Delimiter);
-ft_AA_seq_loc = frequencyTable(MergeCells(db_standard.AAMutation.Two,Delimiter,...
-    db_standard.AAMutation.Loc),Delimiter);
+    ft_NT_seq_loc = frequencyTable(MergeCells(db_test.NTMutation.Two,Delimiter,...
+    db_test.NTMutation.Loc),Delimiter);
+    ft_AA_seq_loc = frequencyTable(MergeCells(db_test.AAMutation.Two,Delimiter,...
+    db_test.AAMutation.Loc),Delimiter);
 
-ft_date = frequencyTable(db_standard.Date);
-ft_country = frequencyTable(db_standard.Country);
+    ft_date = frequencyTable(db_test.Date);
+    ft_country = frequencyTable(db_test.Country);
 
-ft_date_norm = innerjoin(ft_date,ft_date_tot,'LeftKeys',1,'RightKeys',1);
-ft_country_norm = innerjoin(ft_country,ft_country_tot,'LeftKeys',1,'RightKeys',1);
+    ft_date_norm = innerjoin(ft_date,ft_date_tot,'LeftKeys',1,'RightKeys',1);
+    ft_country_norm = innerjoin(ft_country,ft_country_tot,'LeftKeys',1,'RightKeys',1);
 
-ft_date_norm = removevars(ft_date_norm,{'Percent_ft_date',...
+    ft_date_norm = removevars(ft_date_norm,{'Percent_ft_date',...
     'Percent_ft_date_tot'});
-ft_country_norm = removevars(ft_country_norm,{'Percent_ft_country',...
+    ft_country_norm = removevars(ft_country_norm,{'Percent_ft_country',...
     'Percent_ft_country_tot'});
 
-ft_date_norm.Properties.VariableNames = {'Date' 'Mutants_number' 'Total_Tests'};
-ft_country_norm.Properties.VariableNames = {'Country' 'Mutants_number' 'Total_Tests'};
+    ft_date_norm.Properties.VariableNames = {'Date' 'Mutants_number' 'Total_Tests'};
+    ft_country_norm.Properties.VariableNames = {'Country' 'Mutants_number' 'Total_Tests'};
 
-[t1,~] = printMutation(db_standard.NTScore ,db_standard.NTMutation,db_standard.Date,...
-    db_standard.Country,db_standard.Header);
+    [t1,~] = printMutation(db_test.NTScore ,db_test.NTMutation,db_test.Date,...
+        db_test.Country,db_test.Header);
 
-[t2,~] = printMutation(db_standard.AAScore ,db_standard.AAMutation,db_standard.Date,...
-    db_standard.Country,db_standard.Header);
+    [t2,~] = printMutation(db_test.AAScore ,db_test.AAMutation,db_test.Date,...
+        db_test.Country,db_test.Header);
+    disp("saving Results...");
+    version.Output = 4;
+    writetable(t1,dirc.Output+"/Mutations_"+version.Output+i+"_"+n+"_"+m+".xlsx",'Sheet','Nucleotide Seq','UseExcel',false);
+    writetable(t2,dirc.Output+"/Mutations_"+version.Output+i+"_"+n+"_"+m+".xlsx",'Sheet','Amino Acid Seq','UseExcel',false);
 
-disp("saving Results...");
-%% delete (dir.base+dir.data+"Mutations_"+version2+"_"+n+"_"+m+".xlsx");
-writetable(t1,dirc.Output+"/Mutations_"+version.Output+"_"+n+"_"+m+".xlsx",'Sheet','Nucleotide Seq','UseExcel',false);
-writetable(t2,dirc.Output+"/Mutations_"+version.Output+"_"+n+"_"+m+".xlsx",'Sheet','Amino Acid Seq','UseExcel',false);
+    writetable(ft_NT_seq_loc,dirc.Output+"/Mutations_"+version.Output+i+"_"+n+"_"+m+".xlsx",'Sheet','Nucleotide Frequency','UseExcel',false);
+    writetable(ft_AA_seq_loc,dirc.Output+"/Mutations_"+version.Output+i+"_"+n+"_"+m+".xlsx",'Sheet','Amino Acid Frequency','UseExcel',false);
 
-writetable(ft_NT_seq_loc,dirc.Output+"/Mutations_"+version.Output+"_"+n+"_"+m+".xlsx",'Sheet','Nucleotide Frequency','UseExcel',false);
-writetable(ft_AA_seq_loc,dirc.Output+"/Mutations_"+version.Output+"_"+n+"_"+m+".xlsx",'Sheet','Amino Acid Frequency','UseExcel',false);
+    writetable(ft_NT_loc,dirc.Output+"/Mutations_"+version.Output+i+"_"+n+"_"+m+".xlsx",'Sheet','NT Location Frequency','UseExcel',false);
+    writetable(ft_AA_loc,dirc.Output+"/Mutations_"+version.Output+i+"_"+n+"_"+m+".xlsx",'Sheet','AA Location Frequency','UseExcel',false);
 
-writetable(ft_NT_loc,dirc.Output+"/Mutations_"+version.Output+"_"+n+"_"+m+".xlsx",'Sheet','NT Location Frequency','UseExcel',false);
-writetable(ft_AA_loc,dirc.Output+"/Mutations_"+version.Output+"_"+n+"_"+m+".xlsx",'Sheet','AA Location Frequency','UseExcel',false);
+    writetable(ft_date_norm,dirc.Output+"/Mutations_"+version.Output+i+"_"+n+"_"+m+".xlsx",'Sheet','Date Frequency','UseExcel',false);
+    writetable(ft_country_norm,dirc.Output+"/Mutations_"+version.Output+i+"_"+n+"_"+m+".xlsx",'Sheet','Country Frequency','UseExcel',false);
 
-writetable(ft_date_norm,dirc.Output+"/Mutations_"+version.Output+"_"+n+"_"+m+".xlsx",'Sheet','Date Frequency','UseExcel',false);
-writetable(ft_country_norm,dirc.Output+"/Mutations_"+version.Output+"_"+n+"_"+m+".xlsx",'Sheet','Country Frequency','UseExcel',false);
-
-disp("done!");
+end
