@@ -98,7 +98,7 @@ elseif flag == 2 %% load the original data to normalize frequency
 end
 %%
 % Remove sequences which are extremely dissimilar to the original sequence
-[db_1, db_2, OffNum] = ThresholdScore(db,97);
+[db_1, db_2, OffNum] = ThresholdScore(db_standard,97);
 disp("number of highly mutated sequences: "+ OffNum);
 
 db_list = {db_1;db_2};
