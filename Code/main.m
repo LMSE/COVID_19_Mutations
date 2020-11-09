@@ -23,9 +23,9 @@ if flag == 1
         %% check for subset consideration
         comment = sprintf("Gisaid Database size : %d by %d \n",n,m);
         fprintf(comment);
-        % part = input("\nConsider a subset of the database for alignment? [y,n]",'s');
+         part = input("\nConsider a subset of the database for alignment? [y,n]",'s');
         % default
-        part = 'n';
+        % part = 'n';
         if part == 'y'
             n = input("Enter starting index :");
             m = input("Enter final index :");
@@ -35,7 +35,6 @@ if flag == 1
             db_standard.NTSeq = db_standard.NTSeq(n:m,1);
             db_standard.Header = db_standard.Header(n:m,1);
         end
-        
         [countEqu,db_standard, indx_Equ] = CountEqual(block,db_standard);
         disp("the NCBI Sequence is repeated "+countEqu+" times in the Gisaid database");
         
@@ -99,7 +98,7 @@ end
 %%
 % Remove sequences which are extremely dissimilar to the original sequence
 [db_1, db_2, OffNum] = ThresholdScore(db_standard,97);
-disp("number of highly mutated sequences: "+ OffNum);
+disp("number of acceptable mutated sequences: "+ OffNum);
 
 db_list = {db_1;db_2};
 for i=1:length(db_list)

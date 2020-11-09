@@ -5,15 +5,16 @@ function [db] = NtlocalAlignment(seq,db)
     % are remained
     
     disp("Estimated Time for Nucleotide Seq Alignment is:");
-    disp(string(0.82*length(db.NTSeq))+" Seconds");
-    RealScore = localalign(seq,seq,'DoAlignment',false); % Calculating 100% Similairty Score
+    disp(string(1.5*length(db.NTSeq))+" Seconds");
+    RealScore = localalign(seq,seq,'DoAlignment',false, 'Alphabet','NT'); % Calculating 100% Similairty Score
     RealScore = RealScore.Score;
     % Calculating Local Similarity
     tic
-    resAlign = cellfun(@(data) localalign(seq,data),...
-        db.NTSeq,'UniformOutput',false);
+    try
+        resAlign = cellfun(@(data) localalign(seq,data,'Alphabet','NT'),...
+            db.NTSeq,'UniformOutput',false);
 
-    db.NTScore = cellfun(@(data)  round(data.Score/RealScore*100,3) , resAlign,'UniformOutput',false);
+    db.NTScore = cellfun(@(data)  round(data.Score/RealScore*100,3), resAlign,'UniformOutput',false);
     db.NTAlignment = cellfun(@(data)  data.Alignment,resAlign,'UniformOutput',false);
     toc
 end
