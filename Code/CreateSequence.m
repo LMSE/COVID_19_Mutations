@@ -14,6 +14,14 @@ function Block  = CreateSequence(DirectoryOrNCBI)
     Protein = nt2aa(Sequence,'AlternativeStartCodons',false);
     Block.NTSeq = Sequence;
     Block.AASeq = Protein;
-    Block.BNSeq = Block.NTSeq(1,22544:23407);
+    input_a = input('Eneter 1 for RBD fragment, enter 2 for extended RBD fragment => ');
+    if input_a ==1 
+        Block.BNSeq = Block.NTSeq(1,22544:23146);
+    elseif input_a == 2
+        Block.BNSeq = Block.NTSeq(1,22544:23407);
+    else 
+        warning('Input non valide, assuming RBD fragment');
+        Block.BNSeq = Block.NTSeq(1,22544:23146);
+    end
     Block.BASeq = nt2aa(Block.BNSeq,'AlternativeStartCodons',false);
 end
