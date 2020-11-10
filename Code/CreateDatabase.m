@@ -35,8 +35,8 @@ function database = CreateDatabase()
         [HeaderDb,indx3,~] = unique(HeaderDb);
         SequenceDb = SequenceDb(indx3);
         
-        indx4 = find(~contains(HeaderDb,{'cat' 'tiger' 'dog' 'mink' 'lion'...
-            'Environmen' 'Canine' 'bat'}));
+        indx4 = find(~contains(HeaderDb,{'/cat' '/tiger' '/dog' '/mink' '/lion'...
+            '/Environment' '/Canine' '/bat'}));
         SequenceDb = SequenceDb(indx4);
         HeaderDb = HeaderDb(indx4);
         
