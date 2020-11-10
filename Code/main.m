@@ -29,11 +29,7 @@ if flag == 1
         if part == 'y'
             n = input("Enter starting index :");
             m = input("Enter final index :");
-            db_standard.FrameOne = db_standard.FrameOne(n:m,1);
-            db_standard.FrameTwo = db_standard.FrameTwo(n:m,1);
-            db_standard.FrameThree = db_standard.FrameThree(n:m,1);
-            db_standard.NTSeq = db_standard.NTSeq(n:m,1);
-            db_standard.Header = db_standard.Header(n:m,1);
+            db_standard = StructureCut(db_standard, n:m);
         end
         [countEqu,db_standard, indx_Equ] = CountEqual(block,db_standard);
         disp("the NCBI Sequence is repeated "+countEqu+" times in the Gisaid database");
@@ -41,27 +37,25 @@ if flag == 1
     disp("Extracting Date and Country of the reported Sequences");
     db_standard = Header2DateLocation(db_standard);
     
-    
- 
-    
     % Amino Acid Local Alignment
     disp("Aligning Amino Acid Sequences")
     db_standard = AalocalAlignment(block.BASeq,db_standard);
-    % Delete sequences that don't have full coverage in the binding domain
+    
+    % Delete sequences that don't have full coverage in the binding domain   
     [db_standard, indx_fullCoverage] = DeleteNs(db_standard);
-    disp("number of deleted sequences due to the existance of a un categorized amino acid" + numel(indx_fullCoverage));
+    disp("number of deleted sequences due to the existance of a un categorized amino acid " + numel(indx_fullCoverage));
+    
     % Calculating the total number of tests performed at each Date and
-    % Country
+    % Country & Date
     ft_date_tot = frequencyTable(db_standard.Date);
     ft_country_tot = frequencyTable(db_standard.Country);
-    
-    % Deleting Ordinary records
-    [db_standard,countEqu] = DeleteOrdinary(db_standard,db_standard.Aalignment,countEqu);
-    disp("total number of non-mutated sequences in the database: "+countEqu);
     
     % Nucleotide Local Alignment
     disp("Aligning Nucleotide sequences ... ")
     db_standard = NtlocalAlignment(block.BNSeq,db_standard);
+    
+    [db_standard, indx_fullCoverage] = DeleteNs(db_standard);
+    disp("number of deleted sequences due to the existance of a un categorized nucleotide" + numel(indx_fullCoverage));
     
     % Spotting the mutations
     disp("Spoting Mutations in the amino acid sequence");
@@ -70,12 +64,18 @@ if flag == 1
     disp("Spoting Mutations in the Nucleotide sequence");
     db_standard.NTMutation = LocateMutants(block.BNSeq,db_standard.NTAlignment);
     
-    comment = sprintf("number of similar sequences: %d \n",countEqu);
-    fprintf(comment);
+    % Deleting non-mutated records
+    [db_standard,countEqu] = DeleteOrdinary(db_standard,db_standard.NTAlignment,countEqu);
+    disp("total number of non-mutated sequences in the database: "+countEqu);
     
-    res  = dirc.Output+"/Result_db_"+version.Output+"_"+n+"_"+m+".mat";
-    disp("Saving the result in "+ res);
-    save(res,"db_standard");
+    items = numel(db_standard.NTSeq);
+    sections = ceil(linspace(0,items,5));
+    for parts=2:5
+       res =  dirc.Output+"/Result_db_"+parts+"_"+version.Output+"_"+n+"_"+m+".mat";
+       db_parts = StructureCut(db_standard,sections(parts-1)+1:sections(parts));
+       disp("Saving the result in "+ res);
+       save(res,"db_parts");
+    end
     flag = 2;
 elseif flag == 2 %% load the original data to normalize frequency
     flag = 1;

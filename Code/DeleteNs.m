@@ -1,41 +1,15 @@
-function [db,nonEqu_indx] = DeleteNs(db)
+function [db_out,nonEqu_indx] = DeleteNs(db_in)
 
-if isfield(db,'Aalignment')
-    %indx = find(cellfun(@(data) ~ismember('X',data{1}(3,:)),db.Aalignment));
+if isfield(db_in,'NTAlignment')
     
-    indx = find(~cell2mat(db.Flag));
-    
-    db.Flag = db.Flag(indx);
-    db.FrameOne = db.FrameOne(indx);
-    db.FrameTwo = db.FrameTwo(indx);
-    db.FrameThree = db.FrameThree(indx);
-    db.Header = db.Header(indx);
-    db.NTSeq = db.NTSeq(indx);
-    db.Country = db.Country(indx);
-    db.Date = db.Date(indx);
+    indx = find(cellfun(@(data) numel(unique(data{1}(3,:)))<=4,...
+        db_in.NTAlignment));
+    db_out = StructureCut(db_in,indx);
 
-    db.AAScore = db.AAScore(indx);
-    db.Aalignment = db.Aalignment(indx);
-    if isfield(db,'NTAlignment')
-        db.NTScore = db.NTScore(indx);
-        db.NTAlignment = db.NTAlignment(indx);
-    end
-elseif isfield(db,'NTAlignment')
-    indx = find(cellfun(@(data) ismember('N',data{1}(3,:)),db.NTAlignment));
-    db.FrameOne = db.FrameOne(indx);
-    db.FrameTwo = db.FrameTwo(indx);
-    db.FrameThree = db.FrameThree(indx);
-    db.Header = db.Header(indx);
-    db.NTSeq = db.NTSeq(indx);
-    db.Country = db.Country(indx);
-    db.Date=db.Date(indx);
-    if isfield(db,'Aalignment')
-        db.AAScore = db.AAScore(indx);
-        db.Aalignment = db.Aalignment(indx);
-    end
-else
-    indx = 1:length(db.NTSeq);
-    error("Generate Alignment results first");
+if isfield(db_in,'Aalignment')
+    indx = find(~cell2mat(db_in.Flag));
+    db_out = StructureCut(db_in,indx);
 end
-nonEqu_indx = setdiff(1:length(db.NTSeq),indx)';
+
+nonEqu_indx = setdiff(1:length(db_in.NTSeq),indx)';
 end
