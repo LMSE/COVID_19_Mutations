@@ -35,7 +35,12 @@ function database = CreateDatabase()
         [HeaderDb,indx3,~] = unique(HeaderDb);
         SequenceDb = SequenceDb(indx3);
         
-        clear indx1 indx2 indx3;
+        indx4 = find(~contains(HeaderDb,{'cat' 'tiger' 'dog' 'mink' 'lion'...
+            'Environmen' 'Canine' 'bat'}));
+        SequenceDb = SequenceDb(indx4);
+        HeaderDb = HeaderDb(indx4);
+        
+        clear indx1 indx2 indx3 indx4;
         % Coverting nucleotide Sequence to Amino Acid sequence
 
         disp("Generating Main Reading Frames for the input database ...")
