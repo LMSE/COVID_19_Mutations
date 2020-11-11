@@ -20,7 +20,7 @@ function db_out = CreateDatabase()
             SequenceDb{i,1} = FastaDb(i).Sequence;
             HeaderDb{i,1} = FastaDb(i).Header;
         end
-        disp("Curating the Data and removing duplicates ...")
+        disp("Curating the Data: removing duplicates and animal sequences...")
         % Removing sequences which include gapes 
         SequenceDb = cellfun(@(x) upper(x),SequenceDb,'UniformOutput',false);
         % SequenceDb = SequenceDb(~cellfun(@(x) ismember('N',x),SequenceDb));
@@ -70,7 +70,7 @@ function db_out = CreateDatabase()
         sections = ceil(linspace(0,m,items));
         if items > 1
             for parts=2:items
-               res =  dirc.Database + "/db_part_"+parts+".mat";
+               res =  dirc.Database + "/db_part_"+parts-1+".mat";
                db_parts = StructureCut(db_out,sections(parts-1)+1:sections(parts));
                save(res,"db_parts");
                clear db_parts;
@@ -86,9 +86,7 @@ function db_out = CreateDatabase()
         disp("Loading Reading frames ...")
         cd(dirc.Database);
         mat = dir('db_part_*.mat'); 
-        for q = 1:length(mat) 
-            S = load(mat(q).name); 
-        end
+        S = cellfun(@load,{mat.name});
         db_out = ConcatStruct(S);
         
         n = 1;
@@ -99,9 +97,7 @@ function db_out = CreateDatabase()
     elseif flag == 2
         cd(dirc.Output)
         mat = dir('Result_db_*.mat');
-        for q = 1:length(mat) 
-            S = load(mat(q).name); 
-        end
+        S = cellfun(@load,{mat.name});
         db_out = ConcatStruct(S);
         n = 1;
         m = length(db_out.NTSeq);

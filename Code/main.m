@@ -93,6 +93,9 @@ disp("number of acceptable mutated sequences: "+ OffNum);
 db_list = {db_1;db_2};
 for i=1:length(db_list)
     db_test = db_list{i};
+    if isempty(db_test)
+        continue;
+    end
     disp("Analyzing Identified Mutations ...");
     ft_NT_loc = frequencyTable(db_test.NTMutation.Loc);
     ft_AA_loc = frequencyTable(db_test.AAMutation.Loc);
