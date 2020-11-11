@@ -70,8 +70,9 @@ function db_out = CreateDatabase()
         sections = ceil(linspace(0,m,items));
         if items > 1
             for parts=2:items
-               res =  dirc.Database + "/db_part_"+parts-1+".mat";
-               db_parts = StructureCut(db_out,sections(parts-1)+1:sections(parts));
+               ID = parts-1;
+               res =  dirc.Database + "/db_part_"+ID+".mat";
+               db_parts = StructureCut(db_out,sections(ID)+1:sections(parts));
                save(res,"db_parts");
                clear db_parts;
             end
