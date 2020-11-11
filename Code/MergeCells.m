@@ -1,39 +1,41 @@
-function cell_3 = MergeCells(cell_1,Delimiter,varargin)
+function MergeCell = MergeCells(MainCell,Delimiter,varargin)
+% this function merge cells into one cell which is seperated by delimiter
 
-cell_3 = cell(size(cell_1));
+MergeCell = cell(size(MainCell));
+if iscell(MainCell{1})
+    MainCell = cellfun(@(data) data{1}, MainCell,'UniformOutput', false);
+end
 
 switch nargin
-    case 2
-        cell_3 = cell_1;
-    case 3
-        disp("2 Cells given");
-        cell_2 = varargin{1};
-        parfor i = 1:length(cell_1)
-            for j=1:length(cell_1{i})
-                cell_3{i}(j,1) = strcat(num2str(cell_1{i}(j)),Delimiter,...
-                    num2str(cell_2{i}(j)));
+    case 2 %% only one cell is given
+        MergeCell = MainCell;
+    case 3 %% Two cells are given
+        subCell_1 = varargin{1};
+        for i = 1:length(MainCell)
+            for j=1:size(MainCell{i},1)
+                MergeCell{i}(j,1) = strcat(num2str(MainCell{i}(j,:)),Delimiter,...
+                    num2str(subCell_1{i}(j)));
             end
         end
-    case 4
-        disp("3 Cells given");
-        cell_2 = varargin{1};
-        cell_4 = varargin{2};
-         parfor i = 1:length(cell_1)
-            for j=1:length(cell_1{i})
-                cell_3{i}(j,1) = strcat(num2str(cell_1{i}(j)),Delimiter,...
-                    num2str(cell_2{i}(j)), Delimiter, num2str(cell_4{i}(j)));
+    case 4 % 3 cells given
+        subCell_1 = varargin{1};
+        subCell_2 = varargin{2};
+         for i = 1:length(MainCell)
+            for j=1:size(MainCell{i},1)
+                MergeCell{i}(j,1) = strcat(num2str(MainCell{i}(j,:)),Delimiter,...
+                    num2str(subCell_1{i}(j)), Delimiter, num2str(subCell_2{i}(j)));
             end
          end
     case 5
         disp("4 Cells given");
-        cell_2 = varargin{1};
-        cell_4 = varargin{2};
-        cell_5 = varargin{3};
-         parfor i = 1:length(cell_1)
-            for j=1:length(cell_1{i})
-                cell_3{i}(j,1) = strcat(num2str(cell_1{i}(j)),Delimiter,...
-                    num2str(cell_2{i}(j)), Delimiter, num2str(cell_4{i}(j))...
-                    ,Delimiter, num2str(cell_5{i}(j)));
+        subCell_1 = varargin{1};
+        subCell_2 = varargin{2};
+        subCell_3 = varargin{3};
+         for i = 1:length(MainCell)
+            for j=1:size(MainCell{i},1)
+                MergeCell{i}(j,1) = strcat(num2str(MainCell{i}(j,:)),Delimiter,...
+                    num2str(subCell_1{i}(j)), Delimiter, num2str(subCell_2{i}(j))...
+                    ,Delimiter, num2str(subCell_3{i}(j)));
             end
          end
     otherwise

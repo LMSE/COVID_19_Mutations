@@ -5,7 +5,7 @@ global version Delimiter dirc fasta flag result m n;
 m=1;
 %%
 version.Input = 'V10'; %% the version for obtaining Inputs
-version.Output = 'V30'; %% the version for saving results
+version.Output = 'V20'; %% the version for saving results
 
 Delimiter = "|";
 %% Setting up main directories
@@ -13,9 +13,10 @@ currentFolder = strsplit(pwd,{'/','\'});
 disp(currentFolder)
 i = length(currentFolder);
 dirc.base = sprintf('%s/',currentFolder{1:i-1});
-dirc.Input = dirc.base + "Input";
-dirc.Output = dirc.base + "Output";
-dirc.Database = dirc.Input + "/Database";
+dirc.Input = dirc.base + "Input/";
+dirc.Output = dirc.base + "Output/";
+dirc.Database = dirc.Input + "Database/";
+dirc.main = dirc.base + "Code/";
 %% Setting up databases
 flag = 1; % Reading frames exists
 if ~exist(dirc.Database, 'dir')
@@ -41,9 +42,9 @@ if exists(1)>0
     n = str2double(array{4});
 end
 %% Setting up input fasta files
-fasta.db = dirc.Input + "/gisaid_database.fasta";
-fasta.fastaseq = dirc.Input +"/Seq.fasta";
-fasta.pdb = dirc.Input +"/PDB.fasta";
+fasta.db = dirc.Input + "gisaid_database.fasta";
+fasta.fastaseq = dirc.Input +"Seq.fasta";
+fasta.pdb = dirc.Input +"PDB.fasta";
 %% clear variables
 clear currentFolder file exists i;
 

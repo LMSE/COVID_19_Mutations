@@ -6,7 +6,7 @@ function Mutant = LocateMutants(SetSeq ,AlignVector)
     Mutant.Loc = cellfun(@(data) regexp(data(2,:),strjoin(check,'|'))'  , AlignVector,'UniformOutput',false);
     Mutant.One = cellfun(@(data) data(1,regexp(data(2,:),strjoin(check,'|')))'  , AlignVector,'UniformOutput',false);
     Mutant.Two = cellfun(@(data) data(3,regexp(data(2,:),strjoin(check,'|')))'  , AlignVector,'UniformOutput',false);
-    
+    Mutant.Standard = cellfun(@(data) LocationToStandard(SetSeq,data)',Mutant.Loc,'UniformOutput',false);
     %% Reseting the Location
     lag = [];
     for i=1:length(AlignVector)

@@ -1,9 +1,9 @@
 % flag == 0 only the NT sequences are available!
 % flag == 1 the reading frames are generated!
 % flag ==2 Alignment results are generated!
-clc;
+clc; clear;
 setDirectories
-global version Delimiter dirc fasta flag m n;
+global version Delimiter dirc fasta flag m n block;
 %% read Input fasta files: Given Sequence and Given database
 block =  CreateSequence(fasta.fastaseq);
 %% Curated data alreaady exists?
@@ -33,41 +33,45 @@ if flag == 1
         end
         [countEqu,db_standard, indx_Equ] = CountEqual(block,db_standard);
         disp("the NCBI Sequence is repeated "+countEqu+" times in the Gisaid database");
-        
+    %% Extracting total tests in each Date and country   
     disp("Extracting Date and Country of the reported Sequences");
     db_standard = Header2DateLocation(db_standard);
+    % Calculating the total number of tests performed at each Date and
+    % Country & Date
+    ft_date_tot = frequencyTable(db_standard.Date);
+    ft_country_tot = frequencyTable(db_standard.Country);
+    save(dirc.Database+"/date.mat","ft_date_tot");
+    save(dirc.Database+"/country.mat","ft_country_tot");
+    disp("date and country frequency saved");
     
-    % Amino Acid Local Alignment
+    
+    %% Amino Acid Local Alignment
     disp("Aligning Amino Acid Sequences")
     db_standard = AalocalAlignment(block.BASeq,db_standard);
     
     % Delete sequences that don't have full coverage in the binding domain   
     [db_standard, indx_fullCoverage] = DeleteNs(db_standard);
-    disp("number of deleted sequences due to the existance of a un categorized amino acid " + numel(indx_fullCoverage));
+    disp("number of deleted sequences due to the existance of a un categorized amino acid: " + numel(indx_fullCoverage));
+    %% Deleting non-mutated records
+    [db_standard,countEqu] = DeleteOrdinary(db_standard,db_standard.Aalignment,countEqu);
+    disp("total number of non-mutated sequences in the database: "+countEqu);
     
-    % Calculating the total number of tests performed at each Date and
-    % Country & Date
-    ft_date_tot = frequencyTable(db_standard.Date);
-    ft_country_tot = frequencyTable(db_standard.Country);
-    
-    % Nucleotide Local Alignment
+    %% Nucleotide Local Alignment
     disp("Aligning Nucleotide sequences ... ")
     db_standard = NtlocalAlignment(block.BNSeq,db_standard);
     
     [db_standard, indx_fullCoverage] = DeleteNs(db_standard);
-    disp("number of deleted sequences due to the existance of a un categorized nucleotide" + numel(indx_fullCoverage));
+    disp("number of deleted sequences due to the existance of a un categorized nucleotide: " + numel(indx_fullCoverage));
     
-    % Spotting the mutations
+    
+    %% Spotting the mutations
     disp("Spoting Mutations in the amino acid sequence");
     db_standard.AAMutation = LocateMutants(block.BASeq,db_standard.Aalignment);
     
     disp("Spoting Mutations in the Nucleotide sequence");
     db_standard.NTMutation = LocateMutants(block.BNSeq,db_standard.NTAlignment);
-    
-    % Deleting non-mutated records
-    [db_standard,countEqu] = DeleteOrdinary(db_standard,db_standard.NTAlignment,countEqu);
-    disp("total number of non-mutated sequences in the database: "+countEqu);
-    
+       
+    %% saving results
     items = numel(db_standard.NTSeq);
     sections = ceil(linspace(0,items,5));
     for parts=2:5
@@ -78,22 +82,8 @@ if flag == 1
     end
     flag = 2;
 elseif flag == 2 %% load the original data to normalize frequency
-    flag = 1;
-    db_norm = CreateDatabase();
-    
-    [countEqu,db_norm,~] = CountEqual(block,db_norm);
-    
-    disp("Extracting Date and Country of the reported Sequences");
-    db_norm = Header2DateLocation(db_norm);
-    db_norm = AalocalAlignment(block.BASeq,db_norm);
-    % Delete sequences that don't have full coverage in the binding domain
-    [db_norm, indx_fullCoverage] = DeleteNs(db_norm);
-    
-    % Calculating the total number of tests performed at each Date and
-    % Country
-    ft_date_tot = frequencyTable(db_norm.Date);
-    ft_country_tot = frequencyTable(db_norm.Country);
-%     clear db_norm
+    load(dirc.Output+"/country.mat");
+    load(dirc.Output+"/date.mat");
 end
 %%
 % Remove sequences which are extremely dissimilar to the original sequence
@@ -106,12 +96,20 @@ for i=1:length(db_list)
     disp("Analyzing Identified Mutations ...");
     ft_NT_loc = frequencyTable(db_test.NTMutation.Loc);
     ft_AA_loc = frequencyTable(db_test.AAMutation.Loc);
-
-    ft_NT_seq_loc = frequencyTable(MergeCells(db_test.NTMutation.Two,Delimiter,...
-    db_test.NTMutation.Loc),Delimiter);
-    ft_AA_seq_loc = frequencyTable(MergeCells(db_test.AAMutation.Two,Delimiter,...
-    db_test.AAMutation.Loc),Delimiter);
-
+%%   standard sequence location mutation frequency
+ 
+    NT_seq_loc = MergeCells(db_test.NTMutation.Standard,Delimiter,db_test.NTMutation.Loc,db_test.NTMutation.Two);
+    AA_seq_loc = MergeCells(db_test.AAMutation.Standard, Delimiter,db_test.AAMutation.Loc,db_test.AAMutation.Two); 
+    
+    ft_NT_seq_loc = frequencyTable(NT_seq_loc,Delimiter);
+    ft_AA_seq_loc = frequencyTable(AA_seq_loc,Delimiter);
+    
+    country_seq_loc_NT = MergeCells(db_test.Country,Delimiter,NT_seq_loc);
+    country_seq_loc_AA = MergeCells(db_test.Country,Delimiter,AA_seq_loc);
+    
+    ft_country_seq_loc_NT = frequencyTable(country_seq_loc_NT,Delimiter);
+    ft_country_seq_loc_AA = frequencyTable(country_seq_loc_AA,Delimiter);
+    
     ft_date = frequencyTable(db_test.Date);
     ft_country = frequencyTable(db_test.Country);
 
@@ -131,8 +129,8 @@ for i=1:length(db_list)
 
     [t2,~] = printMutation(db_test.AAScore ,db_test.AAMutation,db_test.Date,...
         db_test.Country,db_test.Header);
+    %% saving the results
     disp("saving Results...");
-    version.Output = 4;
     writetable(t1,dirc.Output+"/Mutations_"+version.Output+i+"_"+n+"_"+m+".xlsx",'Sheet','Nucleotide Seq','UseExcel',false);
     writetable(t2,dirc.Output+"/Mutations_"+version.Output+i+"_"+n+"_"+m+".xlsx",'Sheet','Amino Acid Seq','UseExcel',false);
 
@@ -145,4 +143,6 @@ for i=1:length(db_list)
     writetable(ft_date_norm,dirc.Output+"/Mutations_"+version.Output+i+"_"+n+"_"+m+".xlsx",'Sheet','Date Frequency','UseExcel',false);
     writetable(ft_country_norm,dirc.Output+"/Mutations_"+version.Output+i+"_"+n+"_"+m+".xlsx",'Sheet','Country Frequency','UseExcel',false);
 
+    writetable(ft_country_seq_loc_NT,dirc.Output+"/Mutations_"+version.Output+i+"_"+n+"_"+m+".xlsx",'Sheet','Country NT Mutation','UseExcel',false);
+    writetable(ft_country_seq_loc_AA,dirc.Output+"/Mutations_"+version.Output+i+"_"+n+"_"+m+".xlsx",'Sheet','Country AA Mutation','UseExcel',false);
 end

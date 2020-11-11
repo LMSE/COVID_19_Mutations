@@ -42,7 +42,8 @@ function db_out = CreateDatabase()
         
         clear indx1 indx2 indx3 indx4;
         % Coverting nucleotide Sequence to Amino Acid sequence
-
+        disp("the size of the database after removing duplicated/animal sequences is "+numel(HeaderDb));
+        
         disp("Generating Main Reading Frames for the input database ...")
         ProteinDbF1 = cellfun(@(x) nt2aa(x,'ACGTOnly',false,...
             'AlternativeStartCodons',false),SequenceDb,'UniformOutput',false);
@@ -61,11 +62,10 @@ function db_out = CreateDatabase()
         % adjusting the value of n and m after data curation and gap removal
         n = 1;
         m = length(db_out.NTSeq);
-        disp("the size of the database after removing duplicated/animal sequences is "+m);
         
         clear ProteinDbF1 ProteinDbF2 ProteinDbF3 SequenceDb HeaderDb;
         %% Saving reading frames in smaller fragments
-        disp("Saving the result in "+ loc);
+        disp("Saving the result in "+ dirc.Database);
         items = ceil(m/1000);
         sections = ceil(linspace(0,m,items));
         if items > 1
@@ -95,6 +95,7 @@ function db_out = CreateDatabase()
         m = length(db_out.NTSeq);
         
         disp("Reading Frames are Loaded!")
+        cd(dirc.main);
     elseif flag == 2
         cd(dirc.Output)
         mat = dir('Result_db_*.mat');
@@ -104,5 +105,6 @@ function db_out = CreateDatabase()
         db_out = ConcatStruct(S);
         n = 1;
         m = length(db_out.NTSeq);
+        cd(dirc.main)
     end 
 end
