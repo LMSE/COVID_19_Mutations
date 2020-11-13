@@ -39,6 +39,7 @@ function Mutant = LocateMutants(SetSeq ,AlignVector)
         Mutant.Loc{i}(unwanted_indx) = [];
         Mutant.One{i}(unwanted_indx) = [];
         Mutant.Two{i}(unwanted_indx) = [];
+		Mutant.Standard{i}(unwanted_indx) = [];
     end  
 toc
 end
