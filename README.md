@@ -1,28 +1,23 @@
 # The COVID_19_Mutation Package
 This package is developed to identify mutations on SARS-CoV-2 receptor binding domain (RBD).
 severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2) is responsible for the outbreak of COVID-19, which began in China in December 2019. 
-> The SARS-CoV-2 RBD plays the most important roles in viral attachment, fusion and entry, and serves as a target for development of antibodies, entry inhibitors and vaccines.
+> The SARS-CoV-2 RBD plays the most important roles in viral attachment, fusion and entry, and serves as a target for development of antibodies, entry inhibitors and vaccines ( said by [Tai W, et al. 2020](https://www.nature.com/articles/s41423-020-0400-4)).
 
 The user may submit **nucleotide** sequences of any species to this package and perform mutational analysis.
 
 ## Package Requirements
 -	developed by ***MATLAB R2020a***.
--	To run the code, we recommend that the user make sure the Bioinformatics toolbox \
-is installed on MATLAB ([read more](https://www.mathworks.com/products/bioinfo.html)).
+-	To run the code, we recommend that the user make sure the Bioinformatics toolbox is installed on MATLAB ([read more](https://www.mathworks.com/products/bioinfo.html)).
 -	All the nucleotide sequences must be submmited in the **FASTA format**.
 -	The user must prepare the input to this package according to their objectives.
 	
 ## Steps for Preparing the **Input**
-- [x] Download nucleotide sequences for any species, such as SARS-COV-2 patient \
-samples, available on the [GISAID database](https://www.gisaid.org/).
-- [x] Copy the dataset to the COVID_19_Mutations\Input directory.
-- [x] Download a standard nucleotide sequence from NCBI and copy it to the\
-COVID_19_Mutations\Input directory. (As a default, SARS-CoV-2 sequence is provided in this directory)
-- [x] Should the user seek to map mutations’ location to the protein \
-structure, a FASTA file of the PDB structure must be provided in the \
-COVID_19_Mutations\Input directory. (As a default, the PDF file for SARS-CoV-2 spike protein is provided in this directory).
-- [x] Open MATLAB and add COVID_19_Mutations\CODE\Functions to the path.
-- [x] Run COVID_19_Mutations\CODE\main.m script.
+- [x] Download nucleotide sequences for any species, such as SARS-COV-2 patient samples, available on the [GISAID database](https://www.gisaid.org/).
+- [x] Copy the dataset to the *COVID_19_Mutations\Input* directory.
+- [x] Download a standard nucleotide sequence from NCBI and copy it to the *COVID_19_Mutations\Input* directory. (As a default, SARS-CoV-2 sequence is provided in this directory)
+- [x] Should the user seek to map mutations’ location to the protein structure, a FASTA file of the PDB structure must be provided in the *COVID_19_Mutations\Input* directory. (As a default, the PDF file for SARS-CoV-2 spike protein is provided in this directory).
+- [x] Open MATLAB and add *COVID_19_Mutations\CODE\Functions* to the path.
+- [x] Run *COVID_19_Mutations\CODE\main.m* script.
 	
 ## Package Workflow/ Output
 -	Input sequences are refined to remove any duplicate eneteries, and animal samples.
