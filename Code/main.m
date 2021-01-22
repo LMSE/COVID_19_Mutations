@@ -1,3 +1,5 @@
+% this is the main function of COVID-19-Mutations platforms
+
 % flag == 0 only the NT sequences are available!
 % flag == 1 the reading frames are generated!
 % flag ==2 Alignment results are generated!
