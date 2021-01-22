@@ -1,6 +1,6 @@
 # The COVID_19_Mutation Package
-This package is developed to identify mutations on SARS-CoV-2 receptor binding domain (RBD). ![global distribution of mutations](https://github.com/LMSE/COVID_19_Mutations/blob/main/figures/global%20distribution.png).
-severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2) is responsible for the outbreak of COVID-19, which began in China in December 2019. 
+This package is developed to identify mutations on SARS-CoV-2 receptor binding domain (RBD). ![global distribution of mutations](https://github.com/LMSE/COVID_19_Mutations/blob/main/figures/global%20distribution.png)
+/ severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2) is responsible for the outbreak of COVID-19, which began in China in December 2019. 
 > The SARS-CoV-2 RBD plays the most important roles in viral attachment, fusion and entry, and serves as a target for development of antibodies, entry inhibitors and vaccines ([Tai W, et al. 2020](https://www.nature.com/articles/s41423-020-0400-4)).
 
 The user may submit **nucleotide** sequences of any species to this package and perform mutational analysis.
