@@ -41,7 +41,7 @@ The generated Excel file comprises several sheets, discribed below:
 7. **Country Frequency** Sheet: the frequency of Amino Acid mutations per each country.
 
 ## Contact Information
-Should you face any question, please do not hesitate to contact me Via
+Should you face any question, please do not hesitate to contact me via
 - Email: [Kiana.haddadi@mail.utoronto.ca](mailto:kiana.haddadi@mail.utoronto.ca?subject=[GitHub]%20COVID_19%20Mutation)
 - Tel: +1 (437) 236 6459
 
