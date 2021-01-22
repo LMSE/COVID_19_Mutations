@@ -1,7 +1,7 @@
 # The COVID_19_Mutation Package
 This package is developed to identify mutations on SARS-CoV-2 receptor binding domain (RBD).
 severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2) is responsible for the outbreak of COVID-19, which began in China in December 2019. 
-> The SARS-CoV-2 RBD plays the most important roles in viral attachment, fusion and entry, and serves as a target for development of antibodies, entry inhibitors and vaccines ![[Reference]](https://www.nature.com/articles/s41423-020-0400-4).
+> The SARS-CoV-2 RBD plays the most important roles in viral attachment, fusion and entry, and serves as a target for development of antibodies, entry inhibitors and vaccines.
 
 The user may submit **nucleotide** sequences of any species to this package and perform mutational analysis.
 
@@ -51,8 +51,8 @@ The generated Excel file comprises several sheets, discribed below:
 
 ## Contact Information
 Should you face any question, please do not hesitate to contact me Via
-	- Email: [Kiana.haddadi@mail.utoronto.ca](mailto:kiana.haddadi@mail.utoronto.ca?subject=[GitHub]%20COVID_19%20Mutation)
-	- Tel: +1 (437) 236 6459
+- Email: [Kiana.haddadi@mail.utoronto.ca](mailto:kiana.haddadi@mail.utoronto.ca?subject=[GitHub]%20COVID_19%20Mutation)
+- Tel: +1 (437) 236 6459
 
 
 	
