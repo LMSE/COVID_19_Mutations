@@ -22,17 +22,13 @@ The user may submit **nucleotide** sequences of any species to this package and 
 ## Package Workflow/ Output
 -	Input sequences are refined to remove any duplicate eneteries, and animal samples.
 -	Meta data (Country and date) of submited sequences is mined and stored.
--	This package will generate a database of submitted nucleotide sequences along with\
-their three reading frames (This step can take up to two days for large input files on PC)
+-	This package will generate a database of submitted nucleotide sequences along with their three reading frames (This step can take up to two days for large input files on PC)
 -	This database is then saved in the COVID_19_Mutation/Output/database directory.
 - 	The main reading frame of the standard sequence will also be generated.
--	Nucleotide sequences and Three reading frames are locally aligned to the standard \
-sequences.(This step can take up to three days for large input files on personal PC)
--	Sequences that do not show any mutations are then removed. Also a reading frame that \
-matches the standard amino acid sequence is selected.
+-	Nucleotide sequences and Three reading frames are locally aligned to the standard sequences.(This step can take up to three days for large input files on personal PC)
+-	Sequences that do not show any mutations are then removed. Also a reading frame that matches the standard amino acid sequence is selected.
 -	Mutated Sequences are then saved in the COVID_19_Mutation/Output directory.
--	Data is also stored in several tables of an Excel file that can be access in the \
-COVID_19_Mutation/Output directory.
+-	Data is also stored in several tables of an Excel file that can be access in the COVID_19_Mutation/Output directory.
 
 ## Generated Excel File
 The generated Excel file comprises several sheets, discribed below:
