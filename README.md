@@ -40,7 +40,7 @@ matches the standard amino acid sequence is selected.
 COVID_19_Mutation/Output directory.
 
 ## Generated Excel File
-The generated Excel file comprises several sheets, discribed below: \
+The generated Excel file comprises several sheets, discribed below:
 1. **Nucleotid Seq** Sheet: Comprises identified Mutations on submitted nucleotide sequences.
 2. **Amino Acid Seq** Sheet: Comprises identified Mutations on amino acid sequences.
 3. **Nucleotide Frequency** Sheet: Comprises the frequency of Nucleotide mutations across the submitted dataset.
@@ -51,8 +51,8 @@ The generated Excel file comprises several sheets, discribed below: \
 
 ## Contact Information
 Should you face any question, please do not hesitate to contact me Via
-Email: [Kiana.haddadi@mail.utoronto.ca](mailto:kiana.haddadi@mail.utoronto.ca?subject=[GitHub]%20COVID_19%20Mutation)
-Tel: +1 (437) 236 6459
+	Email: [Kiana.haddadi@mail.utoronto.ca](mailto:kiana.haddadi@mail.utoronto.ca?subject=[GitHub]%20COVID_19%20Mutation)
+	Tel: +1 (437) 236 6459
 
 
 	
